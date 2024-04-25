@@ -14,6 +14,31 @@ const formatNumber = n => {
   return n[1] ? n : `0${n}`
 }
 
+const saveTodos = todos => {
+  try {
+    const todosString = JSON.stringify(todos);
+    wx.setStorageSync('todos', todosString);
+  } catch (error) {
+    console.error('Failed to save todos:', error);
+  }
+}
+
+const loadTodos = () => {
+  try {
+    const todosString = wx.getStorageSync('todos');
+    if (todosString) {
+      const todos = JSON.parse(todosString);
+      return todos;
+    }
+    return [];
+  } catch (error) {
+    console.error('Failed to load todos:', error);
+    return [];
+  }
+}
+
 module.exports = {
-  formatTime
+  formatTime,
+  loadTodos,
+  saveTodos
 }

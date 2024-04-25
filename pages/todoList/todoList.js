@@ -1,4 +1,6 @@
 // pages/todoList/todoList.js
+var util = require('../../utils/util.js')
+var onTop = true;
 Page({
   /**
    * 页面的初始数据
@@ -31,25 +33,43 @@ Page({
     todos: [{
       id: 1,
       content: '123',
-      animB: '',
-      animC: '',
-      animD:'',
-      selected: ''
+      done:false
     }, {
       id: 2,
       content: '1222223',
-      animB: '',
-      animC: '',
-      animD:'',
-      selected: ''
+      done:false
     }, {
       id: 3,
       content: '1嗯哼噶覆盖阿萨德挖了讨论收到货了说的话水电费23',
+      done:false
+    }, ],
+    stats: [{
       animB: '',
       animC: '',
-      animD:'',
+      animD: '',
       selected: ''
-    }, ],
+    }, {
+      animB: '',
+      animC: '',
+      animD: '',
+      selected: ''
+    }, {
+      animB: '',
+      animC: '',
+      animD: '',
+      selected: ''
+    }],
+  },
+  saveTodo() {
+    util.saveTodos(this.data.todos)
+  },
+  loadTodo() {
+    this.setData({
+      todos: util.loadTodos()
+    })
+  },
+  restart() {
+    wx.exitMiniProgram()
   },
   handleTodoClick(target) {
     this.startClickAnimB(target);
@@ -66,27 +86,52 @@ Page({
     this.endClickAnimD(target)
   },
   handleTodoOp(target) {
+    var that = this;
     switch (target.mark.op) {
       case 'done':
-        wx.showToast({  
-          title: '正在完成todo:'+target.mark.id+' : '+this.data.todos[target.mark.idx].content,
-          icon: 'success',  
-          duration: 1000  
-        });
+        wx.showModal({
+          title: '这条已经做完了嘛？',
+          content: that.data.todos[target.mark.idx].content,
+          confirmText:'是的！',
+          cancelText:'还没有',
+          success (res) {
+            if (res.confirm) {
+              that.setData({
+                ['todos[' + target.mark.idx + '].done']: true
+              })
+            }
+          }
+        })
         break;
       case 'modify':
-        wx.showToast({  
-          title: '正在修改todo:'+target.mark.id+' : '+this.data.todos[target.mark.idx].content,
-          icon: 'success',  
-          duration: 1000  
-        });
+        wx.showModal({
+          title: '修改待办',
+          content: that.data.todos[target.mark.idx].content,
+          editable:true,
+          placeholderText:that.data.todos[target.mark.idx].content,
+          success (res) {
+            if (res.confirm && res.content !== undefined && res.content.trim() !== "") {
+              that.setData({
+                ['todos[' + target.mark.idx + '].content']: res.content
+              })
+            }
+          }
+        })
         break;
       case 'remove':
-        wx.showToast({  
-          title: '正在删除todo:'+target.mark.id+' : '+this.data.todos[target.mark.idx].content,
-          icon: 'success',  
-          duration: 1000  
-        });
+        wx.showModal({
+          title: '要删除这条待办吗？',
+          content: that.data.todos[target.mark.idx].content,
+          success (res) {
+            if (res.confirm) {
+              var todos = that.data.todos;
+              todos.splice(target.mark.idx, 1)
+              that.setData({
+                todos: todos
+              })
+            }
+          }
+        })
         break;
       default:
         break;
@@ -106,55 +151,65 @@ Page({
   },
   startClickAnimB(target) {
     this.setData({
-      ['todos[' + target.mark.idx + '].animB']: 'animB'
+      ['stats[' + target.mark.idx + '].animB']: 'animB'
     })
   },
   endClickAnimB(target) {
     setTimeout(() => {
       this.setData({
-        ['todos[' + target.mark.idx + '].animB']: ''
+        ['stats[' + target.mark.idx + '].animB']: ''
       })
-    }, 1000);
+    }, 300);
   },
   startClickAnimC(target) {
     this.setData({
-      ['todos[' + target.mark.idx + '].animC']: 'animC',
-      ['todos[' + target.mark.idx + '].selected']: 'selected'
+      ['stats[' + target.mark.idx + '].animC']: 'animC',
+      ['stats[' + target.mark.idx + '].selected']: 'selected'
     })
   },
   endClickAnimC(target) {
     setTimeout(() => {
       this.setData({
-        ['todos[' + target.mark.idx + '].animC']: '',
-        ['todos[' + target.mark.idx + '].selected']: ''
+        ['stats[' + target.mark.idx + '].animC']: '',
+        ['stats[' + target.mark.idx + '].selected']: ''
       })
     }, 100);
   },
   startClickAnimD(target) {
     this.setData({
-      ['todos[' + target.mark.idx + '].animD']: target.mark.op
+      ['stats[' + target.mark.idx + '].animD']: target.mark.op
     })
   },
   endClickAnimD(target) {
     setTimeout(() => {
       this.setData({
-        ['todos[' + target.mark.idx + '].animD']: '',
+        ['stats[' + target.mark.idx + '].animD']: '',
       })
     }, 50);
   },
 
   doAddTodo(id, content) {
     var todos = this.data.todos
+    var stats = this.data.stats
     todos.push({
       id: id,
       content: content,
-      animB: ''
+      done:false
     })
+    stats.push({
+      animB: '',
+      animC: '',
+      animD: '',
+      selected: ''
+    })
+
     this.setData({
-      todos: todos
+      todos: todos,
+      stats: stats
     })
   },
   addTodo() {
+    var that = this;
     wx.showModal({
       title: '提示',
       placeholderText: '请输入待办内容',
@@ -162,8 +217,7 @@ Page({
       editable: true,
       success(res) {
         if (res.confirm && res.content !== undefined && res.content.trim() !== "") {
-          console.log(123)
-          getCurrentPages()[0].doAddTodo(222, res.content)
+          that.doAddTodo(222, res.content)
         }
       }
     })
@@ -172,7 +226,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+this.loadTodo()
   },
 
   /**
@@ -222,5 +276,34 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+  onPageScroll(obj){
+    if(obj.scrollTop===0){
+      onTop=true;
+      wx.setNavigationBarColor({
+        backgroundColor: '#fbf8ff',
+        frontColor: '#000000',
+        fail(res){
+          console.log(res)
+        },
+        animation:{
+          duration:300,
+          timingFunc:'easeOut'
+        }
+      })
+    }else if(onTop){
+      onTop=false;
+      wx.setNavigationBarColor({
+        backgroundColor: '#F3EDF7',
+        frontColor: '#000000',
+        fail(res){
+          console.log(res)
+        },
+        animation:{
+          duration:300,
+          timingFunc:'easeOut'
+        }
+      })
+    }
   }
 })

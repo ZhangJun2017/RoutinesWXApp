@@ -8,8 +8,8 @@
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "Routines",
-    "navigationBarBackgroundColor": "#fefbff",
-    "backgroundColor": "#fefbff"
+    "navigationBarBackgroundColor": "#fbf8ff",
+    "backgroundColor": "#fbf8ff"
   },
   "tabBar": {
     "custom": true,
