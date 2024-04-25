@@ -1,0 +1,48 @@
+{
+  "pages": [
+    "pages/todoList/todoList",
+    "pages/index/index",
+    "pages/logs/logs"
+
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "Routines",
+    "navigationBarBackgroundColor": "#fefbff",
+    "backgroundColor": "#fefbff"
+  },
+  "tabBar": {
+    "custom": true,
+    "selectedColor": "#1b1b1f",
+    "color": "#46464f",
+    "backgroundColor": "#dfe1f9",
+    "borderStyle": "white",
+    "position": "bottom",
+    "list": [{
+        "text": "待办",
+        "pagePath": "pages/todoList/todoList",
+        "iconPath": "img/todoe.png",
+        "selectedIconPath": "img/todof.png"
+      },
+      {
+        "text": "分类",
+        "pagePath": "pages/logs/logs",
+        "iconPath": "img/todoe.png",
+        "selectedIconPath": "img/todof.png"
+      },
+      {
+        "text": "购物车",
+        "pagePath": "pages/index/index",
+        "iconPath": "img/todoe.png",
+        "selectedIconPath": "img/todof.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "useExtendedLib": {
+    "weui": true
+  }
+}

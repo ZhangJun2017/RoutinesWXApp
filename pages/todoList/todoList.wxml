@@ -1,0 +1,23 @@
+<!--pages/todoList/todoList.wxml-->
+
+<block class="main">
+  <block class="todos" wx:for="{{todos}}" wx:key="id">
+    <view id="{{item.id}}" mark:idx="{{index}}" mark:id="{{item.id}}" class="todo {{item.animB}}" bind:touchstart="handleTodoClick" bind:touchend="handleTodoClickOver"><text>{{item.content}}</text>
+      <view class="todo-ops {{item.animC}} {{item.selected}}">
+        <view class="modify-btn todo-op {{item.animD === 'modify' ? 'animD' : ''}}" mark:op="modify" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+          <text>✏️</text>
+        </view>
+        <view class="remove-btn todo-op {{item.animD === 'remove' ? 'animD' : ''}}" mark:op="remove" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+          <text>🗑️</text>
+        </view>
+        <view class="done-btn todo-op {{item.animD === 'done' ? 'animD' : ''}}" mark:op="done" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+          <text>✓</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</block>
+<mp-tabbar reactive="{{false}}" ext-class="tabbar" style="position:fixed;bottom:0;width:100%;left:0;right:0;" list="{{list}}" bindchange="tabChange"></mp-tabbar>
+<view class="fab {{animA}}" bind:tap="addTodo" bind:touchstart="startClickAnimA" bind:touchend="endClickAnimA">
+  <text>+ 添加</text>
+</view>
