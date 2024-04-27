@@ -1,7 +1,8 @@
 /* pages/todoList/todoList.wxss */
-page{
-  background:#fbf8ff;
+page {
+  background: #fbf8ff;
 }
+
 .fab {
   width: 100px;
   height: 50px;
@@ -32,8 +33,8 @@ page{
   transition: all 1s ease-out 1s;
   background: #d6d7e4cc;
   border-radius: 30px;
-padding:5px 10px 5px 0;
-box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.15);
+  padding: 5px 10px 5px 0;
+  box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.15);
 }
 
 .todo-op {
@@ -41,17 +42,18 @@ box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.15);
   height: 40px;
   margin-left: 10px;
   border-radius: 50px;
-  transition: all 0.1s cubic-bezier(0,0,0.2,1);
+  transition: all 0.1s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.done-btn{
+.done-btn {
   background: #505b92;
-  color:white;
+  color: white;
 }
 
-.modify-btn,.remove-btn{
+.modify-btn,
+.remove-btn {
   background: #f2eff9;
-  color:black;
+  color: black;
 }
 
 .todo-ops.animC {
@@ -66,7 +68,7 @@ box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.15);
 
 .animD {
   scale: 80%;
-  transition: all 0.1s cubic-bezier(0,0,0.2,1);
+  transition: all 0.1s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .done-btn {
@@ -98,11 +100,61 @@ box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.15);
   border: #7c7b83 1px solid;
 }
 
+
 .tabbar {
   height: 130rpx;
   padding-bottom: calc(env(safe-area-inset-bottom) - 24rpx);
   background: #fefbff;
 }
+
+.weui-half-screen-dialog__bd,
+.weui-half-screen-dialog__ft {
+  padding: 20px 0;
+}
+/* 
+.hfsheet {
+  height: 426px;
+} */
+
+.generateView>view {
+  opacity: 0;
+  scale: 90%;
+  display: none;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  height: 150px;
+}
+
+.wx_loading_view {
+  padding-top: 150px;
+
+}
+
+.inputView textarea {
+  height: 300px;
+}
+
+.animEa {
+  display: block !important;
+}
+
+.animEb {
+  scale: 100% !important;
+  opacity: 1 !important;
+  transition: all ease-out 0.2s;
+}
+
+.weui-half-screen-dialog__ft{
+visibility: hidden;
+opacity: 0;
+scale: 90%;
+transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+.animEc .weui-half-screen-dialog__ft{
+  visibility:visible;
+  opacity: 1;
+  scale: 100%;
+  transition: all ease-out 0.2s;
+  }
 
 .weui-tabbar__item.weui-bar__item_on .weui-tabbar__label {
   color: #1b1b1f;
