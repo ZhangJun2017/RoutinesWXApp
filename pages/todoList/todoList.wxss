@@ -162,6 +162,18 @@ page {
   padding: 12px
 }
 
+.inputing {
+  margin-top: -30px;
+}
+
+.inputing-parent {
+  height: 400px
+}
+
+.noninputing-parent {
+  height: 300px
+}
+
 .animEa {
   display: block !important;
 }

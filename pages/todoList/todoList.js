@@ -9,6 +9,7 @@ Page({
     animEa: 'input',
     animEb: 'input',
     animEc: 'show',
+    inputing: false,
     showTodoSheet: false,
     generateStatus: 'null',
     hfsheetContent: "",
@@ -149,6 +150,16 @@ Page({
       selected: ''
     }]
   },
+  bindfocus(e) {
+    this.setData({
+      inputing: true
+    })
+  },
+  bindblur(e) {
+    this.setData({
+      inputing: false
+    })
+  },
   bindinput(e) {
     this.setData({
       hfsheetContent: e.detail.value
@@ -268,8 +279,8 @@ Page({
             that.updateGenerateStatus('success', gene)
             return;
           }
-          that.updateGenerateStatus('failed')
         }
+        that.updateGenerateStatus('failed')
       },
       fail(res) {
         that.updateGenerateStatus('failed')
