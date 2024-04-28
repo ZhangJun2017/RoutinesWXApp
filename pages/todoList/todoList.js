@@ -13,7 +13,6 @@ Page({
     showTodoSheet: false,
     generateStatus: 'null',
     hfsheetContent: "",
-    hfHeight: 240,
     generatedTodos: [{
       "checked": true,
       "name": "测试功能",
@@ -517,6 +516,34 @@ Page({
    */
   onLoad(options) {
     this.loadTodo()
+  },onPageScroll(obj) {
+    if (obj.scrollTop === 0) {
+      onTop = true;
+      wx.setNavigationBarColor({
+        backgroundColor: '#fbf8ff',
+        frontColor: '#000000',
+        fail(res) {
+          console.log(res)
+        },
+        animation: {
+          duration: 300,
+          timingFunc: 'easeOut'
+        }
+      })
+    } else if (onTop) {
+      onTop = false;
+      wx.setNavigationBarColor({
+        backgroundColor: '#F3EDF7',
+        frontColor: '#000000',
+        fail(res) {
+          console.log(res)
+        },
+        animation: {
+          duration: 300,
+          timingFunc: 'easeOut'
+        }
+      })
+    }
   }
 })
 
@@ -568,33 +595,5 @@ Page({
 // onShareAppMessage() {
 
 // },
-//   onPageScroll(obj) {
-//     if (obj.scrollTop === 0) {
-//       onTop = true;
-//       wx.setNavigationBarColor({
-//         backgroundColor: '#fbf8ff',
-//         frontColor: '#000000',
-//         fail(res) {
-//           console.log(res)
-//         },
-//         animation: {
-//           duration: 300,
-//           timingFunc: 'easeOut'
-//         }
-//       })
-//     } else if (onTop) {
-//       onTop = false;
-//       wx.setNavigationBarColor({
-//         backgroundColor: '#F3EDF7',
-//         frontColor: '#000000',
-//         fail(res) {
-//           console.log(res)
-//         },
-//         animation: {
-//           duration: 300,
-//           timingFunc: 'easeOut'
-//         }
-//       })
-//     }
-//   }
+  
 // })

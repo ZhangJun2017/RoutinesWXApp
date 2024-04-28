@@ -163,15 +163,12 @@ page {
 }
 
 .inputing {
-  margin-top: -30px;
+  transform: translateY(-30px);
+  /* margin-top: -30px; */
 }
 
 .inputing-parent {
-  height: 400px
-}
-
-.noninputing-parent {
-  height: 300px
+  margin-bottom: 100px;
 }
 
 .animEa {
