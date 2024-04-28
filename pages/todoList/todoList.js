@@ -1,61 +1,60 @@
 // pages/todoList/todoList.js
-var util = require('../../utils/util.js')
+var util = require('../../utils/util.js');
 var onTop = true;
 Page({
   /**
    * 页面的初始数据
    */
   data: {
-    animEa:'input',
-    animEb:'input',
-    animEc:'show',
+    animEa: 'input',
+    animEb: 'input',
+    animEc: 'show',
     showTodoSheet: false,
     generateStatus: 'null',
     hfsheetContent: "",
-    hfHeight:240,
-    generatedTodos:  [
-      {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }, {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }, {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }, {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }, {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }, {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }, {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }, {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }, {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }, {
-        "checked": true,
-        "name": "测试功能",
-        "value": 0
-      }
-    ],
+    hfHeight: 240,
+    generatedTodos: [{
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }, {
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }, {
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }, {
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }, {
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }, {
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }, {
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }, {
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }, {
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }, {
+      "checked": true,
+      "name": "测试功能",
+      "value": 0
+    }],
+    selectedTodos: [],
     list: [{
         "text": "待办",
         "pagePath": "pages/todoList/todoList",
@@ -88,6 +87,38 @@ Page({
         value: 1
       }
     ],
+    addButtons: [{
+        type: 'default',
+        className: '',
+        text: '智能识别',
+        value: 0
+      },
+      {
+        type: 'primary',
+        className: '',
+        text: '添加',
+        value: 1
+      }
+    ],
+    successButtons: [{
+        type: 'default',
+        className: '',
+        text: '返回',
+        value: 2
+      },
+      {
+        type: 'primary',
+        className: '',
+        text: '添加',
+        value: 3
+      }
+    ],
+    failedButtons: [{
+      type: 'primary',
+      className: '',
+      text: '返回',
+      value: 2
+    }],
     todos: [{
       id: 1,
       content: '123',
@@ -118,9 +149,14 @@ Page({
       selected: ''
     }]
   },
-  bindinput: function (e) {
+  bindinput(e) {
     this.setData({
       hfsheetContent: e.detail.value
+    })
+  },
+  bindchange(e) {
+    this.setData({
+      selectedTodos: e.detail.value
     })
   },
   saveTodo() {
@@ -134,7 +170,7 @@ Page({
   restart() {
     wx.exitMiniProgram()
   },
-  aitest() {
+  hfopen() {
     this.setData({
       showTodoSheet: true
     })
@@ -205,8 +241,12 @@ Page({
         break;
     }
   },
-  test(){
-    this.hfbtntap({detail:{index:1}})
+  test() {
+    this.hfbtntap({
+      detail: {
+        index: 1
+      }
+    })
   },
   requestTodoGenerate(prompt) {
     var that = this
@@ -225,70 +265,111 @@ Page({
                 checked: true
               }
             })
-            that.setData({
-              generatedTodos: gene,
-              generateStatus: 'success'
-            })
+            that.updateGenerateStatus('success', gene)
             return;
           }
-          that.setData({
-            generateStatus: 'failed'
-          })
+          that.updateGenerateStatus('failed')
         }
       },
       fail(res) {
-        that.setData({
-          generateStatus: 'failed'
-        })
+        that.updateGenerateStatus('failed')
       }
     })
   },
-  hfbtntap(e) {
-    if (e.detail.index == 0) {
-      this.setData({generateStatus:'pending'})
-      this.requestTodoGenerate(this.data.hfsheetContent)
-    } else {
-      if(this.data.animEa==='input'){
-        this.setData({animEb:'',animEc:''})
+  updateGenerateStatus(to, ext) {
+    switch (to) {
+      case 'null': {
+        this.setData({
+          animEb: '',
+          animEc: '',
+          generatedTodos: [],
+          selectedTodos: []
+        })
         setTimeout(() => {
           this.setData({
-            animEa:'loading'
+            animEa: 'input'
           })
-        }, 200);setTimeout(() => {
-          this.setData({
-            animEb:'loading'
-          })
-        }, 220);
-      }else if(this.data.animEa==='loading'){
-        this.setData({animEb:'',animEc:'show'})
+        }, 200);
         setTimeout(() => {
           this.setData({
-            animEa:'result'
-          })
-        }, 200);setTimeout(() => {
-          this.setData({
-            animEb:'result'
-          })
-        }, 220);
-      }else{
-        this.setData({animEb:'',animEc:'show'})
-        setTimeout(() => {
-          this.setData({
-            animEa:'input'
-          })
-        }, 200);setTimeout(() => {
-          this.setData({
-            animEb:'input'
+            animEb: 'input',
+            animEc: 'show',
+            generateStatus: 'null',
+            buttons: this.data.addButtons
           })
         }, 220);
       }
-      //this.doAddTodo(222, this.data.hfsheetContent)
+      break;
+    case 'success': {
+      this.setData({
+        animEb: '',
+        animEc: 'show',
+        generatedTodos: ext,
+        selectedTodos: 'all',
+        buttons: this.data.successButtons,
+        generateStatus: 'success'
+      })
+      setTimeout(() => {
+        this.setData({
+          animEa: 'result'
+        })
+      }, 200);
+      setTimeout(() => {
+        this.setData({
+          animEb: 'result'
+        })
+      }, 220);
+      break;
+    }
+    case 'failed': {
+      this.setData({
+        generateStatus: 'failed',
+        buttons: this.data.failedButtons,
+        animEc: 'show'
+      })
+      break;
+    }
+    case 'pending': {
+      this.setData({
+        animEb: '',
+        animEc: '',
+        generateStatus: 'pending'
+      })
+      setTimeout(() => {
+        this.setData({
+          animEa: 'loading'
+        })
+      }, 200);
+      setTimeout(() => {
+        this.setData({
+          animEb: 'loading'
+        })
+      }, 220);
+      break;
+    }
+    default: {}
+    }
+  },
+  hfbtntap(e) {
+    if (e.detail.item.value == 0) {
+      this.updateGenerateStatus('pending')
+      this.requestTodoGenerate(this.data.hfsheetContent)
+    } else if (e.detail.item.value == 1) {
+      this.doAddTodo(util.uuid(), this.data.hfsheetContent)
+      this.hfclose()
+    } else if (e.detail.item.value == 2) {
+      this.updateGenerateStatus('null')
+    } else if (e.detail.item.value == 3) {
+      this.doAddTodos(this.data.generatedTodos, this.data.selectedTodos)
+      this.hfclose()
     }
   },
   hfclose() {
     this.setData({
-      showTodoSheet: false
+      showTodoSheet: false,
+      hfsheetContent: '',
     })
+    this.updateGenerateStatus('null')
   },
   startClickAnimA() {
     this.setData({
@@ -342,26 +423,71 @@ Page({
   },
 
   doAddTodo(id, content) {
+    if (content !== undefined && content.trim() !== "") {
+      var todos = this.data.todos
+      var stats = this.data.stats
+      todos.push({
+        id: id,
+        content: content,
+        done: false
+      })
+      stats.push({
+        animB: '',
+        animC: '',
+        animD: '',
+        selected: ''
+      })
+
+      this.setData({
+        todos: todos,
+        stats: stats
+      })
+    }
+  },
+
+  doAddTodos(arr, selected) {
     var todos = this.data.todos
     var stats = this.data.stats
-    todos.push({
-      id: id,
-      content: content,
-      done: false
-    })
-    stats.push({
-      animB: '',
-      animC: '',
-      animD: '',
-      selected: ''
-    })
-
+    if (selected === 'all') {
+      arr.forEach((ele, idx, arr) => {
+        todos.push({
+          id: util.uuid(),
+          content: ele.name,
+          done: false
+        })
+        stats.push({
+          animB: '',
+          animC: '',
+          animD: '',
+          selected: ''
+        })
+      })
+    } else {
+      selected.forEach((ele, idx, arrr) => {
+        todos.push({
+          id: util.uuid(),
+          content: arr[ele].name,
+          done: false
+        })
+        stats.push({
+          animB: '',
+          animC: '',
+          animD: '',
+          selected: ''
+        })
+      })
+    }
     this.setData({
       todos: todos,
       stats: stats
     })
   },
   addTodo() {
+    setTimeout(() => {
+      this.hfopen()
+    }, 50);
+  },
+  addTodoOld() {
     var that = this;
     wx.showModal({
       title: '提示',
@@ -380,83 +506,84 @@ Page({
    */
   onLoad(options) {
     this.loadTodo()
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  },
-  onPageScroll(obj) {
-    if (obj.scrollTop === 0) {
-      onTop = true;
-      wx.setNavigationBarColor({
-        backgroundColor: '#fbf8ff',
-        frontColor: '#000000',
-        fail(res) {
-          console.log(res)
-        },
-        animation: {
-          duration: 300,
-          timingFunc: 'easeOut'
-        }
-      })
-    } else if (onTop) {
-      onTop = false;
-      wx.setNavigationBarColor({
-        backgroundColor: '#F3EDF7',
-        frontColor: '#000000',
-        fail(res) {
-          console.log(res)
-        },
-        animation: {
-          duration: 300,
-          timingFunc: 'easeOut'
-        }
-      })
-    }
   }
 })
+
+// /**
+//  * 生命周期函数--监听页面初次渲染完成
+//  */
+// onReady() {
+
+// },
+
+// /**
+//  * 生命周期函数--监听页面显示
+//  */
+// onShow() {
+
+// },
+
+// /**
+//  * 生命周期函数--监听页面隐藏
+//  */
+// onHide() {
+
+// },
+
+// /**
+//  * 生命周期函数--监听页面卸载
+//  */
+// onUnload() {
+
+// },
+
+// /**
+//  * 页面相关事件处理函数--监听用户下拉动作
+//  */
+// onPullDownRefresh() {
+
+// },
+
+// /**
+//  * 页面上拉触底事件的处理函数
+//  */
+// onReachBottom() {
+
+// },
+
+// /**
+//  * 用户点击右上角分享
+//  */
+// onShareAppMessage() {
+
+// },
+//   onPageScroll(obj) {
+//     if (obj.scrollTop === 0) {
+//       onTop = true;
+//       wx.setNavigationBarColor({
+//         backgroundColor: '#fbf8ff',
+//         frontColor: '#000000',
+//         fail(res) {
+//           console.log(res)
+//         },
+//         animation: {
+//           duration: 300,
+//           timingFunc: 'easeOut'
+//         }
+//       })
+//     } else if (onTop) {
+//       onTop = false;
+//       wx.setNavigationBarColor({
+//         backgroundColor: '#F3EDF7',
+//         frontColor: '#000000',
+//         fail(res) {
+//           console.log(res)
+//         },
+//         animation: {
+//           duration: 300,
+//           timingFunc: 'easeOut'
+//         }
+//       })
+//     }
+//   }
+// })

@@ -20,6 +20,9 @@
 <view class="fab {{animA}}" bind:tap="addTodo" bind:touchstart="startClickAnimA" bind:touchend="endClickAnimA">
   <text>+ 添加</text>
 </view>
+<view class="{{animA}}">
+  <text>调试工具========================</text>
+</view>
 <view class="fab1 {{animA}}" bind:tap="aitest" bind:touchstart="startClickAnimA" bind:touchend="endClickAnimA">
   <text>aitest</text>
 </view>
@@ -34,23 +37,30 @@
 </view>
 <mp-half-screen-dialog extClass="hfsheet {{animEc === 'show'?'animEc':''}}" bindbuttontap="hfbtntap" bindclose="hfclose" show="{{showTodoSheet}}" maskClosable="{{true}}" title="添加新待办" buttons="{{buttons}}">
   <view slot="desc" style="padding:0;">
-    <text bind:tap="test">Tips: 试试输入一段话，让小程序为你生成待办清单</text>
-    <scroll-view scroll-y="true" style="height: 300px;padding-top: 20px;">
-    <view class="generateView">
-      <view class="inputView {{animEa === 'input'?'animEa':''}} {{animEb === 'input'?'animEb':''}}">
-        <textarea class="weui-textarea" placeholder="输入待办事项....." auto-focus="{{true}}" bindinput="bindinput"></textarea>
+    <scroll-view scroll-y="true" style="height: 300px;">
+      <view class="generateView">
+        <view wx:if="{{showTodoSheet}}" class="inputView {{animEa === 'input'?'animEa':''}} {{animEb === 'input'?'animEb':''}}">
+          <text bind:tap="test">Tips: 试试输入一段话，让小程序为你生成待办清单</text>
+          <textarea class="weui-textarea" placeholder="输入待办事项....." bindinput="bindinput"></textarea>
+        </view>
+        <view class="resultView {{animEa === 'result'?'animEa':''}} {{animEb === 'result'?'animEb':''}}" style="margin-top: -38px;">
+          <mp-cells title="选择要添加的待办事项">
+            <mp-checkbox-group prop="checkbox" multi="{{true}}" bindchange="bindchange">
+              <mp-checkbox wx:for="{{generatedTodos}}" wx:key="value" label="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"></mp-checkbox>
+            </mp-checkbox-group>
+          </mp-cells>
+        </view>
+        <view class="loadingView {{animEa === 'loading'?'animEa':''}} {{animEb === 'loading'?'animEb':''}}">
+          <mp-loading type="dot-gray" show="{{true}}" style="display: {{generateStatus !== 'failed'?'unset':'none'}};"></mp-loading>
+          <view class="icon-box" style="display: {{generateStatus === 'failed'?'flex':'none'}};">
+            <i role="img" title="等待" class="weui-icon-info weui-icon_msg"></i>
+            <view class="icon-box-ctn">
+              <view class="icon-box-title">提示</view>
+              <view class="icon-box-desc">请更换表述后重试</view>
+            </view>
+          </view>
+        </view>
       </view>
-      <view class="resultView {{animEa === 'result'?'animEa':''}} {{animEb === 'result'?'animEb':''}}">
-        <mp-cells title="选择要添加的待办事项">
-          <mp-checkbox-group prop="checkbox" multi="{{true}}">
-            <mp-checkbox wx:for="{{generatedTodos}}" wx:key="value" label="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"></mp-checkbox>
-          </mp-checkbox-group>
-        </mp-cells>
-      </view>
-      <view class="loadingView {{animEa === 'loading'?'animEa':''}} {{animEb === 'loading'?'animEb':''}}">
-        <mp-loading type="dot-gray" show="{{true}}"></mp-loading>
-      </view>
-    </view>
-  </scroll-view>
+    </scroll-view>
   </view>
 </mp-half-screen-dialog>
