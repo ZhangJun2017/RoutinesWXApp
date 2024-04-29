@@ -9,6 +9,12 @@ Page({
     animEa: 'input',
     animEb: 'input',
     animEc: 'show',
+    animF: false,
+    textareaValue: '',
+    hftitle: '',
+    hftips: '',
+    hftextareadisabled: false,
+    which: '',
     inputing: false,
     showTodoSheet: false,
     generateStatus: 'null',
@@ -113,6 +119,45 @@ Page({
         value: 3
       }
     ],
+    modifyAndRemoveButtons: [{
+        type: 'warn',
+        className: '',
+        text: '删除',
+        value: 4
+      },
+      {
+        type: 'primary',
+        className: '',
+        text: '保存',
+        value: 5
+      }
+    ],
+    removeButtons: [{
+        type: 'default',
+        className: '',
+        text: '取消',
+        value: 6
+      },
+      {
+        type: 'warn',
+        className: 'warn-accent',
+        text: '删除',
+        value: 4
+      },
+    ],
+    modifyButtons: [{
+        type: 'default',
+        className: '',
+        text: '取消',
+        value: 6
+      },
+      {
+        type: 'primary',
+        className: '',
+        text: '保存',
+        value: 5
+      }
+    ],
     failedButtons: [{
       type: 'primary',
       className: '',
@@ -122,15 +167,15 @@ Page({
     todos: [{
       id: 1,
       content: '123',
-      done: false
+      status: 'done'
     }, {
       id: 2,
       content: '1222223',
-      done: false
+      status: 'notdone'
     }, {
       id: 3,
       content: '1嗯哼噶覆盖阿萨德挖了讨论收到货了说的话水电费23',
-      done: false
+      status: 'pending'
     }, ],
     stats: [{
       animB: '',
@@ -180,10 +225,55 @@ Page({
   restart() {
     wx.exitMiniProgram()
   },
-  hfopen() {
-    this.setData({
-      showTodoSheet: true
-    })
+  hfopen(type, which) {
+    switch (type) {
+      case 'new': {
+        this.setData({
+          hftitle: '添加新待办',
+          hftips: 'Tips: 试试输入一段话，让小程序为你生成待办清单',
+          showTodoSheet: true,
+          buttons: this.data.addButtons
+        })
+        break;
+      }
+      case 'modifyAndRemove': {
+        this.setData({
+          hftitle: '修改待办',
+          hftips: ' ',
+          showTodoSheet: true,
+          textareaValue: this.data.todos[which].content,
+          buttons: this.data.modifyAndRemoveButtons,
+          which: which
+        })
+        break;
+      }
+      case 'modify': {
+        this.setData({
+          hftitle: '修改待办',
+          hftips: ' ',
+          showTodoSheet: true,
+          textareaValue: this.data.todos[which].content,
+          buttons: this.data.modifyButtons,
+          which: which
+        })
+        break;
+      }
+      case 'remove': {
+        this.setData({
+          hftitle: '删除待办',
+          hftips: '确实要删除这条待办事项吗？',
+          hftextareadisabled: true,
+          showTodoSheet: true,
+          textareaValue: this.data.todos[which].content,
+          buttons: this.data.removeButtons,
+          which: which
+        })
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   },
   handleTodoClick(target) {
     this.startClickAnimB(target);
@@ -210,36 +300,10 @@ Page({
           cancelText: '还没有',
           success(res) {
             if (res.confirm) {
-              that.setData({
-                ['todos[' + target.mark.idx + '].done']: true
-              })
-            }
-          }
-        })
-        break;
-      case 'modify':
-        wx.showModal({
-          title: '修改待办',
-          content: that.data.todos[target.mark.idx].content,
-          editable: true,
-          placeholderText: that.data.todos[target.mark.idx].content,
-          success(res) {
-            if (res.confirm && res.content !== undefined && res.content.trim() !== "") {
-              that.setData({
-                ['todos[' + target.mark.idx + '].content']: res.content
-              })
-            }
-          }
-        })
-        break;
-      case 'remove':
-        wx.showModal({
-          title: '要删除这条待办吗？',
-          content: that.data.todos[target.mark.idx].content,
-          success(res) {
-            if (res.confirm) {
               var todos = that.data.todos;
-              todos.splice(target.mark.idx, 1)
+              var todo = todos.splice(target.mark.idx, 1);
+              todo[0].status = 'done'
+              todos.push(todo[0]);
               that.setData({
                 todos: todos
               })
@@ -247,6 +311,61 @@ Page({
           }
         })
         break;
+      case 'pend':
+        var todos = that.data.todos;
+        var todo = todos.splice(target.mark.idx, 1);
+        todo[0].status = 'pending'
+        todos.push(todo[0]);
+        that.setData({
+          todos: todos
+        })
+        break;
+      case 'unpend':
+      case 'undone':
+        var todos = that.data.todos;
+        var todo = todos.splice(target.mark.idx, 1);
+        todo[0].status = 'notdone'
+        todos.push(todo[0]);
+        that.setData({
+          todos: todos
+        })
+        break;
+      case 'modify':
+        // wx.showModal({
+        //   title: '修改待办',
+        //   content: that.data.todos[target.mark.idx].content,
+        //   editable: true,
+        //   placeholderText: that.data.todos[target.mark.idx].content,
+        //   success(res) {
+        //     if (res.confirm && res.content !== undefined && res.content.trim() !== "") {
+        //       that.setData({
+        //         ['todos[' + target.mark.idx + '].content']: res.content
+        //       })
+        //     }
+        //   }
+        // })
+        this.hfopen('modify', target.mark.idx)
+        break;
+      case 'remove':
+        // wx.showModal({
+        //   title: '要删除这条待办吗？',
+        //   content: that.data.todos[target.mark.idx].content,
+        //   success(res) {
+        //     if (res.confirm) {
+        //       var todos = that.data.todos;
+        //       todos.splice(target.mark.idx, 1)
+        //       that.setData({
+        //         todos: todos
+        //       })
+        //     }
+        //   }
+        // })
+        this.hfopen('remove', target.mark.idx)
+        break;
+      case 'modifyAndRemove': {
+        this.hfopen('modifyAndRemove', target.mark.idx)
+        break;
+      }
       default:
         break;
     }
@@ -372,12 +491,30 @@ Page({
     } else if (e.detail.item.value == 3) {
       this.doAddTodos(this.data.generatedTodos, this.data.selectedTodos)
       this.hfclose()
+    } else if (e.detail.item.value == 4) {
+      var todos = this.data.todos;
+      todos.splice(this.data.which, 1)
+      this.setData({
+        todos: todos
+      })
+      this.hfclose()
+    } else if (e.detail.item.value == 5) {
+      if (this.data.hfsheetContent !== undefined && this.data.hfsheetContent.trim() !== "") {
+        this.setData({
+          ['todos[' + this.data.which + '].content']: this.data.hfsheetContent
+        })
+      }
+      this.hfclose()
+    } else if (e.detail.item.value == 6) {
+      this.hfclose()
     }
   },
   hfclose() {
     this.setData({
       showTodoSheet: false,
       hfsheetContent: '',
+      textareaValue: '',
+      hftextareadisabled: false
     })
     this.updateGenerateStatus('null')
   },
@@ -439,7 +576,7 @@ Page({
       todos.push({
         id: id,
         content: content,
-        done: false
+        status: 'notdone'
       })
       stats.push({
         animB: '',
@@ -463,7 +600,7 @@ Page({
         todos.push({
           id: util.uuid(),
           content: ele.name,
-          done: false
+          status: 'notdone'
         })
         stats.push({
           animB: '',
@@ -477,7 +614,7 @@ Page({
         todos.push({
           id: util.uuid(),
           content: arr[ele].name,
-          done: false
+          status: 'notdone'
         })
         stats.push({
           animB: '',
@@ -494,7 +631,7 @@ Page({
   },
   addTodo() {
     setTimeout(() => {
-      this.hfopen()
+      this.hfopen('new')
     }, 50);
   },
   addTodoOld() {
@@ -516,7 +653,8 @@ Page({
    */
   onLoad(options) {
     this.loadTodo()
-  },onPageScroll(obj) {
+  },
+  onPageScroll(obj) {
     if (obj.scrollTop === 0) {
       onTop = true;
       wx.setNavigationBarColor({
@@ -530,6 +668,7 @@ Page({
           timingFunc: 'easeOut'
         }
       })
+      this.setData({animF:false})
     } else if (onTop) {
       onTop = false;
       wx.setNavigationBarColor({
@@ -543,8 +682,15 @@ Page({
           timingFunc: 'easeOut'
         }
       })
+      this.setData({animF:true})
     }
-  }
+  },
+  onHide() {
+    this.saveTodo();
+  },
+  onUnload() {
+    this.saveTodo();
+  },
 })
 
 // /**
@@ -595,5 +741,5 @@ Page({
 // onShareAppMessage() {
 
 // },
-  
+
 // })
