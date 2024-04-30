@@ -22,6 +22,7 @@ page {
 
 .todos {
   padding-top: calc(52px + 5px);
+  padding-bottom: 16px;
 }
 
 .todo-ops {
@@ -34,11 +35,12 @@ page {
   top: 50%;
   margin-top: -25px;
   right: 10px;
-  transition: all 1s ease-out 1s;
+  transition: all 0.3s ease-out 1s;
   background: #d6d7e4cc;
   border-radius: 30px;
   padding: 5px 10px 5px 0;
   box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.15);
+  scale: 90%;
 }
 
 .todo-op {
@@ -61,8 +63,9 @@ page {
 }
 
 .todo-ops.animC {
+  scale: 100%;
   opacity: 1;
-  transition: all cubic-bezier(0, 0, 0.2, 1) 0.1s
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.3s;
 }
 
 .todo-ops.selected {
@@ -104,44 +107,79 @@ page {
   width: 300px;
   margin: 0 auto;
   height: 40px;
-  border-radius: 50px;
+  border-radius: 20px;
   border: solid 1px #E3E1EC;
   overflow: hidden;
-  transition: all ease-out 300ms;
+  transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+  position: relative;
 }
 
 /* 设置小div样式 */
 .todo-selector {
   width: 100px;
   height: 40px;
-  display: inline-block;
   line-height: 40px;
   text-align: center;
   font-size: small;
+  box-sizing: border-box;
+  overflow: hidden;
   background: #fbf8ff;
+  transition: all 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  position: absolute;
   /* 可选：添加背景色以便看到效果 */
   /* 可选：添加间距以便看到小div之间的区别 */
 }
 
 .todo-selectors.elevated {
   box-shadow: 0px 10px 15px 5px rgb(0 0 0 / 10%);
-  transition: all ease-out 300ms;
+  border: solid 1px #8f7ee8;
+  border-radius: 10px;
+  font-size: initial;
+  width: 150px;
+  transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.todo-selector.elevated {
+  width: 50px;
+  transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .todo-selector.selected {
   background: #DFE1FA;
 }
 
-.todos-done,
-.todos-notdone,
-.todos-pending {
+.todo-selector-pending {
+  border-left: solid 1px #E3E1EC;
+  border-right: solid 1px #E3E1EC;
+  left: 100px;
+}
+
+.todo-selector-notdone {
+  left: 0;
+}
+
+.todo-selector-done {
+  left: 200px
+}
+
+.todo-selector-pending.elevated {
+  left: 50px;
+}
+
+.todo-selector-notdone.elevated {
+  left: 0;
+}
+
+.todo-selector-done.elevated {
+  left: 100px
+}
+
+.todolist {
   display: flex;
   flex-direction: column-reverse;
 }
 
-.todo-indicator-done,
-.todo-indicator-notdone,
-.todo-indicator-pending {
+.todo-counter {
   flex-direction: column;
 }
 
@@ -232,6 +270,25 @@ page {
 
 .inputing-parent {
   margin-bottom: 100px;
+}
+
+.notappear {
+  opacity: 0;
+  scale: 95%;
+  transform: translateY(40px);
+  transition:
+  scale 0.1s cubic-bezier(0, 0, 0.2, 1),
+  transform 0s cubic-bezier(0, 0, 0.2, 1) 0.1s,
+  opacity 0.1s cubic-bezier(0, 0, 0.2, 1),
+}
+
+.appear {
+  opacity: 1;
+  scale: 100%;
+  transition: 
+  scale 0.4s cubic-bezier(0, 0, 0.2, 1),
+  transform 0.8s cubic-bezier(0, 0, 0.2, 1) 0s,
+  opacity 0.6s cubic-bezier(0, 0, 0.2, 1),
 }
 
 .animEa {

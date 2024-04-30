@@ -10,6 +10,14 @@ Page({
     animEb: 'input',
     animEc: 'show',
     animF: false,
+    animG: 'notappear',
+    todoCounter: {
+      'done': 0,
+      'notdone': 0
+    },
+    'pending': 0,
+    shorten: 'shorten',
+    currentTab: 'notdone',
     textareaValue: '',
     hftitle: '',
     hftips: '',
@@ -218,9 +226,16 @@ Page({
     util.saveTodos(this.data.todos)
   },
   loadTodo() {
-    this.setData({
-      todos: util.loadTodos()
+    var todos = util.loadTodos()
+    var stats = todos.map(() => {
+      return {
+        animB: '',
+        animC: '',
+        animD: '',
+        selected: ''
+      }
     })
+    this.updateTodoArr(todos, stats)
   },
   restart() {
     wx.exitMiniProgram()
@@ -275,6 +290,17 @@ Page({
       }
     }
   },
+  handleTabClick(target) {
+    this.setData({
+      animG: 'notappear',
+    })
+    setTimeout(() => {
+      this.setData({
+        currentTab: target.mark.tab,
+        animG: 'appear'
+      })
+    }, 100);
+  },
   handleTodoClick(target) {
     this.startClickAnimB(target);
     this.startClickAnimC(target);
@@ -304,9 +330,7 @@ Page({
               var todo = todos.splice(target.mark.idx, 1);
               todo[0].status = 'done'
               todos.push(todo[0]);
-              that.setData({
-                todos: todos
-              })
+              that.updateTodoArr(todos)
             }
           }
         })
@@ -316,9 +340,7 @@ Page({
         var todo = todos.splice(target.mark.idx, 1);
         todo[0].status = 'pending'
         todos.push(todo[0]);
-        that.setData({
-          todos: todos
-        })
+        that.updateTodoArr(todos)
         break;
       case 'unpend':
       case 'undone':
@@ -326,9 +348,7 @@ Page({
         var todo = todos.splice(target.mark.idx, 1);
         todo[0].status = 'notdone'
         todos.push(todo[0]);
-        that.setData({
-          todos: todos
-        })
+        that.updateTodoArr(todos)
         break;
       case 'modify':
         // wx.showModal({
@@ -494,15 +514,13 @@ Page({
     } else if (e.detail.item.value == 4) {
       var todos = this.data.todos;
       todos.splice(this.data.which, 1)
-      this.setData({
-        todos: todos
-      })
+      this.updateTodoArr(todos)
       this.hfclose()
     } else if (e.detail.item.value == 5) {
       if (this.data.hfsheetContent !== undefined && this.data.hfsheetContent.trim() !== "") {
-        this.setData({
-          ['todos[' + this.data.which + '].content']: this.data.hfsheetContent
-        })
+        var todos = this.data.todos;
+        todos[this.data.which].content = this.data.hfsheetContent;
+        this.updateTodoArr(todos)
       }
       this.hfclose()
     } else if (e.detail.item.value == 6) {
@@ -543,10 +561,17 @@ Page({
     }, 300);
   },
   startClickAnimC(target) {
-    this.setData({
-      ['stats[' + target.mark.idx + '].animC']: 'animC',
-      ['stats[' + target.mark.idx + '].selected']: 'selected'
-    })
+    if (this.data.stats[target.mark.idx].selected === '') {
+      this.setData({
+        ['stats[' + target.mark.idx + '].animC']: 'animC-once',
+        ['stats[' + target.mark.idx + '].selected']: 'selected-once'
+      })
+    } else {
+      this.setData({
+        ['stats[' + target.mark.idx + '].animC']: 'animC',
+        ['stats[' + target.mark.idx + '].selected']: 'selected'
+      })
+    }
   },
   endClickAnimC(target) {
     setTimeout(() => {
@@ -554,7 +579,7 @@ Page({
         ['stats[' + target.mark.idx + '].animC']: '',
         ['stats[' + target.mark.idx + '].selected']: ''
       })
-    }, 100);
+    }, 1000);
   },
   startClickAnimD(target) {
     this.setData({
@@ -584,11 +609,7 @@ Page({
         animD: '',
         selected: ''
       })
-
-      this.setData({
-        todos: todos,
-        stats: stats
-      })
+      this.updateTodoArr(todos, stats)
     }
   },
 
@@ -624,10 +645,7 @@ Page({
         })
       })
     }
-    this.setData({
-      todos: todos,
-      stats: stats
-    })
+    this.updateTodoArr(todos, stats)
   },
   addTodo() {
     setTimeout(() => {
@@ -647,6 +665,35 @@ Page({
         }
       }
     })
+  },
+  updateTodoArr(todos, stats) {
+    this.setData({
+      animG: 'notappear'
+    })
+    setTimeout(() => {
+      if (arguments.length == 1) {
+        this.setData({
+          todos: todos,
+          todoCounter: {
+            'done': todos.filter(item => item.status == 'done').length,
+            'notdone': todos.filter(item => item.status == 'notdone').length,
+            'pending': todos.filter(item => item.status == 'pending').length
+          },
+          animG: 'appear'
+        })
+      } else {
+        this.setData({
+          todos: todos,
+          stats: stats,
+          todoCounter: {
+            'done': todos.filter(item => item.status == 'done').length,
+            'notdone': todos.filter(item => item.status == 'notdone').length,
+            'pending': todos.filter(item => item.status == 'pending').length
+          },
+          animG: 'appear'
+        })
+      }
+    }, 100);
   },
   /**
    * 生命周期函数--监听页面加载
@@ -668,7 +715,9 @@ Page({
           timingFunc: 'easeOut'
         }
       })
-      this.setData({animF:false})
+      this.setData({
+        animF: false
+      })
     } else if (onTop) {
       onTop = false;
       wx.setNavigationBarColor({
@@ -682,7 +731,9 @@ Page({
           timingFunc: 'easeOut'
         }
       })
-      this.setData({animF:true})
+      this.setData({
+        animF: true
+      })
     }
   },
   onHide() {
