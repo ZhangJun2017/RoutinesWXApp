@@ -13,11 +13,13 @@ Page({
     animG: 'notappear',
     todoCounter: {
       'done': 0,
-      'notdone': 0
+      'notdone': 0,
+      'pending': 0
     },
-    'pending': 0,
+    noteCounter: 0,
     shorten: 'shorten',
     currentTab: 'notdone',
+    currentPage: 'todos',
     textareaValue: '',
     hftitle: '',
     hftips: '',
@@ -200,6 +202,26 @@ Page({
       animC: '',
       animD: '',
       selected: ''
+    }],
+    notes: [{
+      id: 1,
+      content: '123',
+      time: 0
+    }, {
+      id: 2,
+      content: '1222223',
+      time: 0
+    }, {
+      id: 3,
+      content: '1嗯哼噶覆盖阿萨德挖了讨论收到货了说的话水电费23',
+      time: 0
+    }],
+    statsNote: [{
+      animB: ''
+    }, {
+      animB: ''
+    }, {
+      animB: ''
     }]
   },
   bindfocus(e) {
@@ -225,6 +247,9 @@ Page({
   saveTodo() {
     util.saveTodos(this.data.todos)
   },
+  saveNote() {
+    util.saveNotes(this.data.notes)
+  },
   loadTodo() {
     var todos = util.loadTodos()
     var stats = todos.map(() => {
@@ -236,6 +261,15 @@ Page({
       }
     })
     this.updateTodoArr(todos, stats)
+  },
+  loadNote() {
+    var notes = util.loadNotes()
+    var stats = notes.map(() => {
+      return {
+        animB: ''
+      }
+    })
+    this.updateNoteArr(notes, stats)
   },
   restart() {
     wx.exitMiniProgram()
@@ -302,12 +336,18 @@ Page({
     }, 100);
   },
   handleTodoClick(target) {
-    this.startClickAnimB(target);
+    this.startClickAnimB(target, '');
     this.startClickAnimC(target);
   },
   handleTodoClickOver(target) {
-    this.endClickAnimB(target);
+    this.endClickAnimB(target, '');
     this.endClickAnimC(target);
+  },
+  handleNoteClick(target) {
+    this.startClickAnimB(target, 'Note');
+  },
+  handleNoteClickOver(target) {
+    this.endClickAnimB(target, 'Note');
   },
   handleTodoOpClick(target) {
     this.startClickAnimD(target)
@@ -548,15 +588,15 @@ Page({
       })
     }, 200);
   },
-  startClickAnimB(target) {
+  startClickAnimB(target, what) {
     this.setData({
-      ['stats[' + target.mark.idx + '].animB']: 'animB'
+      ['stats' + what + '[' + target.mark.idx + '].animB']: 'animB'
     })
   },
-  endClickAnimB(target) {
+  endClickAnimB(target, what) {
     setTimeout(() => {
       this.setData({
-        ['stats[' + target.mark.idx + '].animB']: ''
+        ['stats' + what + '[' + target.mark.idx + '].animB']: ''
       })
     }, 300);
   },
@@ -666,6 +706,21 @@ Page({
       }
     })
   },
+  switchPages(to) {
+    this.setData({
+      animGb: 'notappearB'
+    })
+    setTimeout(() => {
+      this.setData({
+        currentPage: to
+      })
+    }, 100);
+    setTimeout(() => {
+      this.setData({
+        animGb: 'appearB'
+      })
+    }, 120);
+  },
   updateTodoArr(todos, stats) {
     this.setData({
       animG: 'notappear'
@@ -695,11 +750,33 @@ Page({
       }
     }, 100);
   },
+  updateNoteArr(notes, stats) {
+    this.setData({
+      animG: 'notappear'
+    })
+    setTimeout(() => {
+      if (arguments.length == 1) {
+        this.setData({
+          notes: notes,
+          noteCounter: notes.length,
+          animG: 'appear'
+        })
+      } else {
+        this.setData({
+          notes: notes,
+          statsNote: stats,
+          noteCounter: notes.length,
+          animG: 'appear'
+        })
+      }
+    }, 100);
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
     this.loadTodo()
+    this.loadNote()
   },
   onPageScroll(obj) {
     if (obj.scrollTop === 0) {
@@ -738,10 +815,29 @@ Page({
   },
   onHide() {
     this.saveTodo();
+    this.saveNote();
   },
   onUnload() {
     this.saveTodo();
+    this.saveNote();
   },
+  tabChange(e) {
+    switch (e.detail.index) {
+      case 0: {
+        this.switchPages('todos')
+        break
+      }
+      case 1: {
+        this.switchPages('notes')
+        break
+      }
+      case 2: {
+        break;
+      }
+      default:
+        break;
+    }
+  }
 })
 
 // /**

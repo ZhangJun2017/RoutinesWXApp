@@ -1,50 +1,71 @@
 <!--pages/todoList/todoList.wxml-->
-<block class="main">
-  <view class="sticky">
-    <view class="todo-selectors {{animF?'elevated':''}}">
-      <view class="todo-selector-notdone todo-selector {{currentTab=='notdone'?'selected':''}} {{animF?'elevated':''}}" mark:tab="notdone" bind:tap="handleTabClick">{{animF?'📋':'📋 未完成'}}</view>
-      <view class="todo-selector-pending todo-selector {{currentTab=='pending'?'selected':''}} {{animF?'elevated':''}}" mark:tab="pending" bind:tap="handleTabClick">{{animF?'⌛':'⌛ 暂时搁置'}}</view>
-      <view class="todo-selector-done todo-selector {{currentTab=='done'?'selected':''}} {{animF?'elevated':''}}" mark:tab="done" bind:tap="handleTabClick">{{animF?'✅':'✅ 已完成'}}</view>
+<block wx:if="{{currentPage==='todos'}}">
+  <view class="todo-page {{animGb}}">
+    <view class="sticky">
+      <view class="todo-selectors {{animF?'elevated':''}}">
+        <view class="todo-selector-notdone todo-selector {{currentTab=='notdone'?'selected':''}} {{animF?'elevated':''}}" mark:tab="notdone" bind:tap="handleTabClick">{{animF?'📋':'📋 未完成'}}</view>
+        <view class="todo-selector-pending todo-selector {{currentTab=='pending'?'selected':''}} {{animF?'elevated':''}}" mark:tab="pending" bind:tap="handleTabClick">{{animF?'⌛':'⌛ 暂时搁置'}}</view>
+        <view class="todo-selector-done todo-selector {{currentTab=='done'?'selected':''}} {{animF?'elevated':''}}" mark:tab="done" bind:tap="handleTabClick">{{animF?'✅':'✅ 已完成'}}</view>
+      </view>
     </view>
-  </view>
-  <view class="todos">
-    <view class="todolist {{animG}}">
-      <block wx:for="{{todos}}" wx:key="id">
-        <view wx:if="{{item.status===currentTab}}" mark:idx="{{index}}" mark:id="{{item.id}}" class="todo {{stats[index].animB}}" bind:touchstart="handleTodoClick" bind:touchend="handleTodoClickOver"><text>{{item.content}}</text>
-          <view wx:if="{{currentTab==='notdone'}}" class="todo-ops {{stats[index].animC}} {{stats[index].selected}}">
-            <view class="modify-btn todo-op {{stats[index].animD === 'modifyAndRemove' ? 'animD' : ''}}" mark:op="modifyAndRemove" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
-              <text>✏️</text>
+    <view class="todos">
+      <view class="todolist {{animG}}">
+        <block wx:for="{{todos}}" wx:key="id">
+          <view wx:if="{{item.status===currentTab}}" mark:idx="{{index}}" mark:id="{{item.id}}" class="todo {{stats[index].animB}}" bind:touchstart="handleTodoClick" bind:touchend="handleTodoClickOver"><text>{{item.content}}</text>
+            <view wx:if="{{currentTab==='notdone'}}" class="todo-ops {{stats[index].animC}} {{stats[index].selected}}">
+              <view class="modify-btn todo-op {{stats[index].animD === 'modifyAndRemove' ? 'animD' : ''}}" mark:op="modifyAndRemove" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+                <text>✏️</text>
+              </view>
+              <view class="remove-btn todo-op {{stats[index].animD === 'pend' ? 'animD' : ''}}" mark:op="pend" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+                <text>⏸️</text>
+              </view>
+              <view class="done-btn todo-op {{stats[index].animD === 'done' ? 'animD' : ''}}" mark:op="done" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+                <text>✓</text>
+              </view>
             </view>
-            <view class="remove-btn todo-op {{stats[index].animD === 'pend' ? 'animD' : ''}}" mark:op="pend" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
-              <text>⏸️</text>
+            <view wx:elif="{{currentTab==='done'}}" class="todo-ops {{stats[index].animC}} {{stats[index].selected}}">
+              <view class="modify-btn todo-op {{stats[index].animD === 'modify' ? 'animD' : ''}}" mark:op="modify" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+                <text>✏️</text>
+              </view>
+              <view class="remove-btn todo-op {{stats[index].animD === 'remove' ? 'animD' : ''}}" mark:op="remove" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+                <text>🗑️</text>
+              </view>
+              <view class="done-btn todo-op {{stats[index].animD === 'undone' ? 'animD' : ''}}" mark:op="undone" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+                <text>↺</text>
+              </view>
             </view>
-            <view class="done-btn todo-op {{stats[index].animD === 'done' ? 'animD' : ''}}" mark:op="done" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
-              <text>✓</text>
+            <view wx:elif="{{currentTab==='pending'}}" class="todo-ops {{stats[index].animC}} {{stats[index].selected}}">
+              <view class="modify-btn todo-op {{stats[index].animD === 'modify' ? 'animD' : ''}}" mark:op="modify" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+                <text>✏️</text>
+              </view>
+              <view class="remove-btn todo-op {{stats[index].animD === 'remove' ? 'animD' : ''}}" mark:op="remove" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+                <text>🗑️</text>
+              </view>
+              <view class="done-btn todo-op {{stats[index].animD === 'unpend' ? 'animD' : ''}}" mark:op="unpend" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
+                <text>▶️</text>
+              </view>
             </view>
           </view>
-          <view wx:elif="{{currentTab==='done'}}" class="todo-ops {{stats[index].animC}} {{stats[index].selected}}"><view class="modify-btn todo-op {{stats[index].animD === 'modify' ? 'animD' : ''}}" mark:op="modify" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
-              <text>✏️</text>
-            </view>
-            <view class="remove-btn todo-op {{stats[index].animD === 'remove' ? 'animD' : ''}}" mark:op="remove" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
-              <text>🗑️</text>
-            </view>
-            <view class="done-btn todo-op {{stats[index].animD === 'undone' ? 'animD' : ''}}" mark:op="undone" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
-              <text>↺</text>
-            </view></view>
-          <view wx:elif="{{currentTab==='pending'}}" class="todo-ops {{stats[index].animC}} {{stats[index].selected}}"><view class="modify-btn todo-op {{stats[index].animD === 'modify' ? 'animD' : ''}}" mark:op="modify" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
-              <text>✏️</text>
-            </view>
-            <view class="remove-btn todo-op {{stats[index].animD === 'remove' ? 'animD' : ''}}" mark:op="remove" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
-              <text>🗑️</text>
-            </view>
-            <view class="done-btn todo-op {{stats[index].animD === 'unpend' ? 'animD' : ''}}" mark:op="unpend" bind:tap="handleTodoOp" bind:touchstart="handleTodoOpClick" bind:touchend="handleTodoOpClickOver">
-              <text>▶️</text>
-            </view></view>
+        </block>
+        <view class="todo-counter" style="text-align: center;">
+          <!-- 未完成 ({{notDoneCount}}) -->
+          共 {{todoCounter[currentTab]}} 条
         </view>
-      </block>
-      <view class="todo-counter" style="text-align: center;">
-        <!-- 未完成 ({{notDoneCount}}) -->
-        共 {{todoCounter[currentTab]}} 条
+      </view>
+    </view>
+  </view>
+</block>
+<block wx:if="{{currentPage==='notes'}}">
+  <view class="note-page {{animGb}}">
+    <view class="notes">
+      <view class="notelist">
+        <block wx:for="{{notes}}" wx:key="id">
+          <view mark:idx="{{index}}" mark:id="{{item.id}}" class="note {{statsNote[index].animB}}" bind:touchstart="handleNoteClick" bind:touchend="handleNoteClickOver"><text>{{item.content}}</text>
+          </view>
+        </block>
+        <view class="todo-counter" style="text-align: center;">
+          共 {{noteCounter}} 条
+        </view>
       </view>
     </view>
   </view>
