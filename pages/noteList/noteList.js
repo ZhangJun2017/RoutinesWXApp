@@ -1,4 +1,4 @@
-// pages/todoList/todoList.js
+// pages/noteList/noteList.js
 var util = require('../../utils/util.js');
 var onTop = true;
 Page({
@@ -6,7 +6,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    current: 0,
+    current: 1,
     animEa: 'input',
     animEb: 'input',
     animEc: 'show',
@@ -14,7 +14,7 @@ Page({
     animG: 'notappear',
     animHa:'-1',
     animHb:'1',
-    todoCounter: {
+    noteCounter: {
       'done': 0,
       'notdone': 0
     },
@@ -27,10 +27,10 @@ Page({
     hftextareadisabled: false,
     which: '',
     inputing: false,
-    showTodoSheet: false,
+    showNoteSheet: false,
     generateStatus: 'null',
     hfsheetContent: "",
-    generatedTodos: [{
+    generatedNotes: [{
       "checked": true,
       "name": "测试功能",
       "value": 0
@@ -71,7 +71,7 @@ Page({
       "name": "测试功能",
       "value": 0
     }],
-    selectedTodos: [],
+    selectedNotes: [],
     list: [{
         "text": "待办",
         "pagePath": "pages/todoList/todoList",
@@ -175,7 +175,7 @@ Page({
       text: '返回',
       value: 2
     }],
-    todos: [{
+    notes: [{
       id: 1,
       content: '123',
       status: 'done'
@@ -222,15 +222,15 @@ Page({
   },
   bindchange(e) {
     this.setData({
-      selectedTodos: e.detail.value
+      selectedNotes: e.detail.value
     })
   },
-  saveTodo() {
-    util.saveData(this.data.todos, 'todos')
+  saveNote() {
+    util.saveData(this.data.notes, 'notes')
   },
-  loadTodo() {
-    var todos = util.loadData('todos')
-    var stats = todos.map(() => {
+  loadNote() {
+    var notes = util.loadData('notes')
+    var stats = notes.map(() => {
       return {
         animB: '',
         animC: '',
@@ -238,7 +238,7 @@ Page({
         selected: ''
       }
     })
-    this.updateTodoArr(todos, stats)
+    this.updateNoteArr(notes, stats)
   },
   restart() {
     wx.exitMiniProgram()
@@ -249,7 +249,7 @@ Page({
         this.setData({
           hftitle: '添加新待办',
           hftips: 'Tips: 试试输入一段话，让小程序为你生成待办清单',
-          showTodoSheet: true,
+          showNoteSheet: true,
           buttons: this.data.addButtons
         })
         break;
@@ -258,8 +258,8 @@ Page({
         this.setData({
           hftitle: '修改待办',
           hftips: ' ',
-          showTodoSheet: true,
-          textareaValue: this.data.todos[which].content,
+          showNoteSheet: true,
+          textareaValue: this.data.notes[which].content,
           buttons: this.data.modifyAndRemoveButtons,
           which: which
         })
@@ -269,8 +269,8 @@ Page({
         this.setData({
           hftitle: '修改待办',
           hftips: ' ',
-          showTodoSheet: true,
-          textareaValue: this.data.todos[which].content,
+          showNoteSheet: true,
+          textareaValue: this.data.notes[which].content,
           buttons: this.data.modifyButtons,
           which: which
         })
@@ -281,8 +281,8 @@ Page({
           hftitle: '删除待办',
           hftips: '确实要删除这条待办事项吗？',
           hftextareadisabled: true,
-          showTodoSheet: true,
-          textareaValue: this.data.todos[which].content,
+          showNoteSheet: true,
+          textareaValue: this.data.notes[which].content,
           buttons: this.data.removeButtons,
           which: which
         })
@@ -304,65 +304,65 @@ Page({
       })
     }, 100);
   },
-  handleTodoClick(target) {
+  handleNoteClick(target) {
     this.startClickAnimB(target);
     this.startClickAnimC(target);
   },
-  handleTodoClickOver(target) {
+  handleNoteClickOver(target) {
     this.endClickAnimB(target);
     this.endClickAnimC(target);
   },
-  handleTodoOpClick(target) {
+  handleNoteOpClick(target) {
     this.startClickAnimD(target)
   },
-  handleTodoOpClickOver(target) {
+  handleNoteOpClickOver(target) {
     this.endClickAnimD(target)
   },
-  handleTodoOp(target) {
+  handleNoteOp(target) {
     var that = this;
     switch (target.mark.op) {
       case 'done':
         wx.showModal({
           title: '这条已经做完了嘛？',
-          content: that.data.todos[target.mark.idx].content,
+          content: that.data.notes[target.mark.idx].content,
           confirmText: '是的！',
           cancelText: '还没有',
           success(res) {
             if (res.confirm) {
-              var todos = that.data.todos;
-              var todo = todos.splice(target.mark.idx, 1);
-              todo[0].status = 'done'
-              todos.push(todo[0]);
-              that.updateTodoArr(todos)
+              var notes = that.data.notes;
+              var note = notes.splice(target.mark.idx, 1);
+              note[0].status = 'done'
+              notes.push(note[0]);
+              that.updateNoteArr(notes)
             }
           }
         })
         break;
       case 'pend':
-        var todos = that.data.todos;
-        var todo = todos.splice(target.mark.idx, 1);
-        todo[0].status = 'pending'
-        todos.push(todo[0]);
-        that.updateTodoArr(todos)
+        var notes = that.data.notes;
+        var note = notes.splice(target.mark.idx, 1);
+        note[0].status = 'pending'
+        notes.push(note[0]);
+        that.updateNoteArr(notes)
         break;
       case 'unpend':
       case 'undone':
-        var todos = that.data.todos;
-        var todo = todos.splice(target.mark.idx, 1);
-        todo[0].status = 'notdone'
-        todos.push(todo[0]);
-        that.updateTodoArr(todos)
+        var notes = that.data.notes;
+        var note = notes.splice(target.mark.idx, 1);
+        note[0].status = 'notdone'
+        notes.push(note[0]);
+        that.updateNoteArr(notes)
         break;
       case 'modify':
         // wx.showModal({
         //   title: '修改待办',
-        //   content: that.data.todos[target.mark.idx].content,
+        //   content: that.data.notes[target.mark.idx].content,
         //   editable: true,
-        //   placeholderText: that.data.todos[target.mark.idx].content,
+        //   placeholderText: that.data.notes[target.mark.idx].content,
         //   success(res) {
         //     if (res.confirm && res.content !== undefined && res.content.trim() !== "") {
         //       that.setData({
-        //         ['todos[' + target.mark.idx + '].content']: res.content
+        //         ['notes[' + target.mark.idx + '].content']: res.content
         //       })
         //     }
         //   }
@@ -372,13 +372,13 @@ Page({
       case 'remove':
         // wx.showModal({
         //   title: '要删除这条待办吗？',
-        //   content: that.data.todos[target.mark.idx].content,
+        //   content: that.data.notes[target.mark.idx].content,
         //   success(res) {
         //     if (res.confirm) {
-        //       var todos = that.data.todos;
-        //       todos.splice(target.mark.idx, 1)
+        //       var notes = that.data.notes;
+        //       notes.splice(target.mark.idx, 1)
         //       that.setData({
-        //         todos: todos
+        //         notes: notes
         //       })
         //     }
         //   }
@@ -400,7 +400,7 @@ Page({
       }
     })
   },
-  requestTodoGenerate(prompt) {
+  requestNoteGenerate(prompt) {
     var that = this
     wx.request({
       url: 'https://little.bushtit.cn/parse',
@@ -409,8 +409,8 @@ Page({
       },
       success(res) {
         if (res.statusCode == 200) {
-          if (res.data && Array.isArray(res.data.todo) && res.data.todo.length != 0 && res.data.todo[0] != 'error') {
-            var gene = res.data.todo.map(function (item, index) {
+          if (res.data && Array.isArray(res.data.note) && res.data.note.length != 0 && res.data.note[0] != 'error') {
+            var gene = res.data.note.map(function (item, index) {
               return {
                 name: item,
                 value: index,
@@ -434,8 +434,8 @@ Page({
         this.setData({
           animEb: '',
           animEc: '',
-          generatedTodos: [],
-          selectedTodos: []
+          generatedNotes: [],
+          selectedNotes: []
         })
         setTimeout(() => {
           this.setData({
@@ -456,8 +456,8 @@ Page({
       this.setData({
         animEb: '',
         animEc: 'show',
-        generatedTodos: ext,
-        selectedTodos: 'all',
+        generatedNotes: ext,
+        selectedNotes: 'all',
         buttons: this.data.successButtons,
         generateStatus: 'success'
       })
@@ -505,25 +505,25 @@ Page({
   hfbtntap(e) {
     if (e.detail.item.value == 0) {
       this.updateGenerateStatus('pending')
-      this.requestTodoGenerate(this.data.hfsheetContent)
+      this.requestNoteGenerate(this.data.hfsheetContent)
     } else if (e.detail.item.value == 1) {
-      this.doAddTodo(util.uuid(), this.data.hfsheetContent)
+      this.doAddNote(util.uuid(), this.data.hfsheetContent)
       this.hfclose()
     } else if (e.detail.item.value == 2) {
       this.updateGenerateStatus('null')
     } else if (e.detail.item.value == 3) {
-      this.doAddTodos(this.data.generatedTodos, this.data.selectedTodos)
+      this.doAddNotes(this.data.generatedNotes, this.data.selectedNotes)
       this.hfclose()
     } else if (e.detail.item.value == 4) {
-      var todos = this.data.todos;
-      todos.splice(this.data.which, 1)
-      this.updateTodoArr(todos)
+      var notes = this.data.notes;
+      notes.splice(this.data.which, 1)
+      this.updateNoteArr(notes)
       this.hfclose()
     } else if (e.detail.item.value == 5) {
       if (this.data.hfsheetContent !== undefined && this.data.hfsheetContent.trim() !== "") {
-        var todos = this.data.todos;
-        todos[this.data.which].content = this.data.hfsheetContent;
-        this.updateTodoArr(todos)
+        var notes = this.data.notes;
+        notes[this.data.which].content = this.data.hfsheetContent;
+        this.updateNoteArr(notes)
       }
       this.hfclose()
     } else if (e.detail.item.value == 6) {
@@ -532,7 +532,7 @@ Page({
   },
   hfclose() {
     this.setData({
-      showTodoSheet: false,
+      showNoteSheet: false,
       hfsheetContent: '',
       textareaValue: '',
       hftextareadisabled: false
@@ -596,14 +596,16 @@ Page({
       })
     }, 50);
   },
+
   playAnimH(from){
     this.setData({animHa:from,animHb:1})
   },
-  doAddTodo(id, content) {
+
+  doAddNote(id, content) {
     if (content !== undefined && content.trim() !== "") {
-      var todos = this.data.todos
+      var notes = this.data.notes
       var stats = this.data.stats
-      todos.push({
+      notes.push({
         id: id,
         content: content,
         status: 'notdone'
@@ -614,16 +616,16 @@ Page({
         animD: '',
         selected: ''
       })
-      this.updateTodoArr(todos, stats)
+      this.updateNoteArr(notes, stats)
     }
   },
 
-  doAddTodos(arr, selected) {
-    var todos = this.data.todos
+  doAddNotes(arr, selected) {
+    var notes = this.data.notes
     var stats = this.data.stats
     if (selected === 'all') {
       arr.forEach((ele, idx, arr) => {
-        todos.push({
+        notes.push({
           id: util.uuid(),
           content: ele.name,
           status: 'notdone'
@@ -637,7 +639,7 @@ Page({
       })
     } else {
       selected.forEach((ele, idx, arrr) => {
-        todos.push({
+        notes.push({
           id: util.uuid(),
           content: arr[ele].name,
           status: 'notdone'
@@ -650,14 +652,14 @@ Page({
         })
       })
     }
-    this.updateTodoArr(todos, stats)
+    this.updateNoteArr(notes, stats)
   },
-  addTodo() {
+  addNote() {
     setTimeout(() => {
       this.hfopen('new')
     }, 50);
   },
-  addTodoOld() {
+  addNoteOld() {
     var that = this;
     wx.showModal({
       title: '提示',
@@ -666,34 +668,34 @@ Page({
       editable: true,
       success(res) {
         if (res.confirm && res.content !== undefined && res.content.trim() !== "") {
-          that.doAddTodo(222, res.content)
+          that.doAddNote(222, res.content)
         }
       }
     })
   },
-  updateTodoArr(todos, stats) {
+  updateNoteArr(notes, stats) {
     this.setData({
       animG: 'notappear'
     })
     setTimeout(() => {
       if (arguments.length == 1) {
         this.setData({
-          todos: todos,
-          todoCounter: {
-            'done': todos.filter(item => item.status == 'done').length,
-            'notdone': todos.filter(item => item.status == 'notdone').length,
-            'pending': todos.filter(item => item.status == 'pending').length
+          notes: notes,
+          noteCounter: {
+            'done': notes.filter(item => item.status == 'done').length,
+            'notdone': notes.filter(item => item.status == 'notdone').length,
+            'pending': notes.filter(item => item.status == 'pending').length
           },
           animG: 'appear'
         })
       } else {
         this.setData({
-          todos: todos,
+          notes: notes,
           stats: stats,
-          todoCounter: {
-            'done': todos.filter(item => item.status == 'done').length,
-            'notdone': todos.filter(item => item.status == 'notdone').length,
-            'pending': todos.filter(item => item.status == 'pending').length
+          noteCounter: {
+            'done': notes.filter(item => item.status == 'done').length,
+            'notdone': notes.filter(item => item.status == 'notdone').length,
+            'pending': notes.filter(item => item.status == 'pending').length
           },
           animG: 'appear'
         })
@@ -704,7 +706,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(e) {
-    this.loadTodo()
+    this.loadNote()
     this.playAnimH(e.from?e.from:'-1')
   },
   onPageScroll(obj) {
@@ -742,22 +744,21 @@ Page({
       })
     }
   },
-  onShow() {
-  },
   onHide() {
-    this.saveTodo();
+    this.saveNote();
     // this.setData({
-    //   current: 1
+    //   current: 0
     // })
   },
+  onShow() {
+  },
   onUnload() {
-    this.saveTodo();
+    this.saveNote();
   },
   tabChange(e) {
-    // this.setData({current:1})
-    //  this.setData({current:1})
+    //  this.setData({current:0}) 
     wx.switchTab({
-      url: '/' + e.detail.item.pagePath+'?from=0',
+      url: '/' + e.detail.item.pagePath + '?from=1',
     })
     console.log(e)
   },
@@ -765,6 +766,7 @@ Page({
     this.playAnimH(e.from)
   }
 })
+
 
 // /**
 //  * 生命周期函数--监听页面初次渲染完成

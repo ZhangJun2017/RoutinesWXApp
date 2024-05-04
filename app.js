@@ -1,4 +1,5 @@
 // app.js
+import wxbuf from 'utils/wxbuf'
 App({
   onLaunch() {
     wx.redirectTo({

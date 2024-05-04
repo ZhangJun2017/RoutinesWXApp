@@ -1,4 +1,4 @@
-/* pages/todoList/todoList.wxss */
+/* pages/noteList/noteList.wxss */
 page {
   background: #fbf8ff;
 }
@@ -20,12 +20,12 @@ page {
   right: 10px;
 }
 
-.todos {
+.notes {
   padding-top: calc(52px + 5px);
   padding-bottom: 16px;
 }
 
-.todo-ops {
+.note-ops {
   display: flex;
   opacity: 0;
   visibility: hidden;
@@ -43,7 +43,7 @@ page {
   scale: 90%;
 }
 
-.todo-op {
+.note-op {
   width: 40px;
   height: 40px;
   margin-left: 10px;
@@ -62,13 +62,13 @@ page {
   color: black;
 }
 
-.todo-ops.animC {
+.note-ops.animC {
   scale: 100%;
   opacity: 1;
   transition: all cubic-bezier(0, 0, 0.2, 1) 0.3s;
 }
 
-.todo-ops.selected {
+.note-ops.selected {
   opacity: 1;
   visibility: visible;
 }
@@ -103,7 +103,7 @@ page {
 }
 
 /* 设置大div样式，使其水平居中 */
-.todo-selectors {
+.note-selectors {
   width: 300px;
   margin: 0 auto;
   height: 40px;
@@ -115,7 +115,7 @@ page {
 }
 
 /* 设置小div样式 */
-.todo-selector {
+.note-selector {
   width: 100px;
   height: 40px;
   line-height: 40px;
@@ -130,7 +130,7 @@ page {
   /* 可选：添加间距以便看到小div之间的区别 */
 }
 
-.todo-selectors.elevated {
+.note-selectors.elevated {
   box-shadow: 0px 10px 15px 5px rgb(0 0 0 / 10%);
   border: solid 1px #8f7ee8;
   border-radius: 10px;
@@ -139,51 +139,51 @@ page {
   transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.todo-selector.elevated {
+.note-selector.elevated {
   width: 50px;
   transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.todo-selector.selected {
+.note-selector.selected {
   background: #DFE1FA;
 }
 
-.todo-selector-pending {
+.note-selector-pending {
   border-left: solid 1px #E3E1EC;
   border-right: solid 1px #E3E1EC;
   left: 100px;
 }
 
-.todo-selector-notdone {
+.note-selector-notdone {
   left: 0;
 }
 
-.todo-selector-done {
+.note-selector-done {
   left: 200px
 }
 
-.todo-selector-pending.elevated {
+.note-selector-pending.elevated {
   left: 50px;
 }
 
-.todo-selector-notdone.elevated {
+.note-selector-notdone.elevated {
   left: 0;
 }
 
-.todo-selector-done.elevated {
+.note-selector-done.elevated {
   left: 100px
 }
 
-.todolist {
+.notelist {
   display: flex;
   flex-direction: column-reverse;
 }
 
-.todo-counter {
+.note-counter {
   flex-direction: column;
 }
 
-.todo {
+.note {
   margin: 5px 10px;
   padding: 8px 12px;
   border-radius: 12px;
@@ -314,11 +314,10 @@ page {
   scale: 100%;
   transition: all ease-out 0.2s;
 }
-
 .weui-bar__item_on .weui-tabbar__label{
   color: #1b1b1f!important;
   font-weight: 700!important;
-    /* transition: all 0.2s cubic-bezier(0, 0, 0.2, 1); */
+    transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .animHFrom.weui-bar__item_on .weui-tabbar__label {
@@ -329,18 +328,18 @@ page {
 .weui-tabbar__label {
   color: #47464a!important;
   font-weight: 500!important;
-  /* transition: all 0.4s ease; */
+  transition: all 0.4s ease;
 }
 
 .animHTo .weui-tabbar__label {
   color: #1b1b1f!important;
   font-weight: 700!important;
-  /* transition: all 0.2s cubic-bezier(0, 0, 0.2, 1); */
+  transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
  .weui-bar__item_on .weui-tabbar__icon {
   background: #dfe1f9!important;
-  /* transition: all 0.4s ease; */
+  transition: all 0.4s ease;
   padding: 4px 22px!important;
 }
 
@@ -354,11 +353,11 @@ page {
   padding: 8px 0 0 0!important;
   height: 2.4em!important;
   width: 2.4em!important;
-  /* transition: all 0.2s cubic-bezier(0, 0, 0.2, 1); */
+  transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .animHTo .weui-tabbar__icon {
   background: #dfe1f9!important;
-  /* transition: all 0.4s ease; */
+  transition: all 0.4s ease;
   padding: 4px 22px!important;
 }

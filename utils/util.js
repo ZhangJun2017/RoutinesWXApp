@@ -14,18 +14,18 @@ const formatNumber = n => {
   return n[1] ? n : `0${n}`
 }
 
-const saveTodos = todos => {
+const saveData = (datas,what) => {
   try {
-    const todosString = JSON.stringify(todos);
-    wx.setStorageSync('todos', todosString);
+    const todosString = JSON.stringify(datas);
+    wx.setStorageSync(what, todosString);
   } catch (error) {
     console.error('Failed to save todos:', error);
   }
 }
 
-const loadTodos = () => {
+const loadData = (what) => {
   try {
-    const todosString = wx.getStorageSync('todos');
+    const todosString = wx.getStorageSync(what);
     if (todosString) {
       const todos = JSON.parse(todosString);
       return todos;
@@ -51,7 +51,7 @@ const uuid = function () {
 }
 module.exports = {
   formatTime,
-  loadTodos,
-  saveTodos,
+  loadData,
+  saveData,
   uuid
 }

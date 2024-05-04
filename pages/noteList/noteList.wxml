@@ -1,0 +1,99 @@
+<!--pages/noteList/noteList.wxml-->
+<block class="main">
+  <view class="sticky">
+    <view class="note-selectors {{animF?'elevated':''}}">
+      <view class="note-selector-notdone note-selector {{currentTab=='notdone'?'selected':''}} {{animF?'elevated':''}}" mark:tab="notdone" bind:tap="handleTabClick">{{animF?'📋':'📋 未完成'}}</view>
+      <view class="note-selector-pending note-selector {{currentTab=='pending'?'selected':''}} {{animF?'elevated':''}}" mark:tab="pending" bind:tap="handleTabClick">{{animF?'⌛':'⌛ 暂时搁置'}}</view>
+      <view class="note-selector-done note-selector {{currentTab=='done'?'selected':''}} {{animF?'elevated':''}}" mark:tab="done" bind:tap="handleTabClick">{{animF?'✅':'✅ 已完成'}}</view>
+    </view>
+  </view>
+  <view class="notes">
+    <view class="notelist {{animG}}">
+      <block wx:for="{{notes}}" wx:key="id">
+        <view wx:if="{{item.status===currentTab}}" mark:idx="{{index}}" mark:id="{{item.id}}" class="note {{stats[index].animB}}" bind:touchstart="handleNoteClick" bind:touchend="handleNoteClickOver"><text>{{item.content}}</text>
+          <view wx:if="{{currentTab==='notdone'}}" class="note-ops {{stats[index].animC}} {{stats[index].selected}}">
+            <view class="modify-btn note-op {{stats[index].animD === 'modifyAndRemove' ? 'animD' : ''}}" mark:op="modifyAndRemove" bind:tap="handleNoteOp" bind:touchstart="handleNoteOpClick" bind:touchend="handleNoteOpClickOver">
+              <text>✏️</text>
+            </view>
+            <view class="remove-btn note-op {{stats[index].animD === 'pend' ? 'animD' : ''}}" mark:op="pend" bind:tap="handleNoteOp" bind:touchstart="handleNoteOpClick" bind:touchend="handleNoteOpClickOver">
+              <text>⏸️</text>
+            </view>
+            <view class="done-btn note-op {{stats[index].animD === 'done' ? 'animD' : ''}}" mark:op="done" bind:tap="handleNoteOp" bind:touchstart="handleNoteOpClick" bind:touchend="handleNoteOpClickOver">
+              <text>✓</text>
+            </view>
+          </view>
+          <view wx:elif="{{currentTab==='done'}}" class="note-ops {{stats[index].animC}} {{stats[index].selected}}"><view class="modify-btn note-op {{stats[index].animD === 'modify' ? 'animD' : ''}}" mark:op="modify" bind:tap="handleNoteOp" bind:touchstart="handleNoteOpClick" bind:touchend="handleNoteOpClickOver">
+              <text>✏️</text>
+            </view>
+            <view class="remove-btn note-op {{stats[index].animD === 'remove' ? 'animD' : ''}}" mark:op="remove" bind:tap="handleNoteOp" bind:touchstart="handleNoteOpClick" bind:touchend="handleNoteOpClickOver">
+              <text>🗑️</text>
+            </view>
+            <view class="done-btn note-op {{stats[index].animD === 'undone' ? 'animD' : ''}}" mark:op="undone" bind:tap="handleNoteOp" bind:touchstart="handleNoteOpClick" bind:touchend="handleNoteOpClickOver">
+              <text>↺</text>
+            </view></view>
+          <view wx:elif="{{currentTab==='pending'}}" class="note-ops {{stats[index].animC}} {{stats[index].selected}}"><view class="modify-btn note-op {{stats[index].animD === 'modify' ? 'animD' : ''}}" mark:op="modify" bind:tap="handleNoteOp" bind:touchstart="handleNoteOpClick" bind:touchend="handleNoteOpClickOver">
+              <text>✏️</text>
+            </view>
+            <view class="remove-btn note-op {{stats[index].animD === 'remove' ? 'animD' : ''}}" mark:op="remove" bind:tap="handleNoteOp" bind:touchstart="handleNoteOpClick" bind:touchend="handleNoteOpClickOver">
+              <text>🗑️</text>
+            </view>
+            <view class="done-btn note-op {{stats[index].animD === 'unpend' ? 'animD' : ''}}" mark:op="unpend" bind:tap="handleNoteOp" bind:touchstart="handleNoteOpClick" bind:touchend="handleNoteOpClickOver">
+              <text>▶️</text>
+            </view></view>
+        </view>
+      </block>
+      <view class="note-counter" style="text-align: center;">
+        <!-- 未完成 ({{notDoneCount}}) -->
+        共 {{noteCounter[currentTab]}} 条
+      </view>
+    </view>
+  </view>
+</block>
+<mp-tabbar current="{{animHa}}" from="{{animHa}}" to="{{animHb}}" reactive="{{false}}" ext-class="tabbar" style="position:fixed;bottom:0;width:100%;left:0;right:0;" list="{{list}}" bindchange="tabChange"></mp-tabbar>
+<view class="fab {{animA}}" bind:tap="addNote" bind:touchstart="startClickAnimA" bind:touchend="endClickAnimA">
+  <text>+ 添加</text>
+</view>
+<!-- <view class="{{animA}}">
+  <text>调试工具========================</text>
+</view>
+<view class="fab1 {{animA}}" bind:tap="aitest" bind:touchstart="startClickAnimA" bind:touchend="endClickAnimA">
+  <text>aitest</text>
+</view>
+<view class="fab1 {{animA}}" bind:tap="saveNote" bind:touchstart="startClickAnimA" bind:touchend="endClickAnimA">
+  <text>save</text>
+</view>
+<view class="fab1 {{animA}}" bind:tap="loadNote" bind:touchstart="startClickAnimA" bind:touchend="endClickAnimA">
+  <text>load</text>
+</view>
+<view class="fab1 {{animA}}" bind:tap="restart" bind:touchstart="startClickAnimA" bind:touchend="endClickAnimA">
+  <text>restart</text>
+</view> -->
+<mp-half-screen-dialog extClass="hfsheet {{animEc === 'show'?'animEc':''}}" bindbuttontap="hfbtntap" bindclose="hfclose" show="{{showNoteSheet}}" maskClosable="{{true}}" title="{{hftitle}}" buttons="{{buttons}}">
+  <view slot="desc">
+    <scroll-view class="{{inputing==true?'inputing-parent':''}}" style="height: 300px;" scroll-y="true">
+      <view class="generateView">
+        <view wx:if="{{showNoteSheet}}" class="inputView {{animEa === 'input'?'animEa':''}} {{animEb === 'input'?'animEb':''}}  {{(inputing==true||hftips==' ')?'inputing':''}}">
+          <text bind:tap="test">{{hftips}}</text>
+          <textarea class="weui-textarea" show-confirm-bar="{{false}}" adjust-position="{{false}}" placeholder="输入待办事项....." bindinput="bindinput" bindblur="bindblur" bindfocus="bindfocus" maxlength="-1" value="{{textareaValue}}" disabled="{{hftextareadisabled}}"></textarea>
+        </view>
+        <view class="resultView {{animEa === 'result'?'animEa':''}} {{animEb === 'result'?'animEb':''}}" style="margin-top: -38px;">
+          <mp-cells title="选择要添加的待办事项">
+            <mp-checkbox-group prop="checkbox" multi="{{true}}" bindchange="bindchange">
+              <mp-checkbox wx:for="{{generatedNotes}}" wx:key="value" label="{{item.name}}" value="{{item.value}}" checked="{{item.checked}}"></mp-checkbox>
+            </mp-checkbox-group>
+          </mp-cells>
+        </view>
+        <view class="loadingView {{animEa === 'loading'?'animEa':''}} {{animEb === 'loading'?'animEb':''}}">
+          <mp-loading type="dot-gray" show="{{true}}" style="display: {{generateStatus !== 'failed'?'unset':'none'}};"></mp-loading>
+          <view class="icon-box" style="display: {{generateStatus === 'failed'?'flex':'none'}};">
+            <i role="img" title="等待" class="weui-icon-info weui-icon_msg"></i>
+            <view class="icon-box-ctn">
+              <view class="icon-box-title">提示</view>
+              <view class="icon-box-desc">请更换表述后重试</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</mp-half-screen-dialog>

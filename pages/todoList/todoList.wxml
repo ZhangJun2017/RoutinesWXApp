@@ -49,7 +49,7 @@
     </view>
   </view>
 </block>
-<mp-tabbar reactive="{{false}}" ext-class="tabbar" style="position:fixed;bottom:0;width:100%;left:0;right:0;" list="{{list}}" bindchange="tabChange"></mp-tabbar>
+<mp-tabbar current="{{animHa}}" from="{{animHa}}" to="{{animHb}}" reactive="{{false}}" ext-class="tabbar" style="position:fixed;bottom:0;width:100%;left:0;right:0;" list="{{list}}" bindchange="tabChange"></mp-tabbar>
 <view class="fab {{animA}}" bind:tap="addTodo" bind:touchstart="startClickAnimA" bind:touchend="endClickAnimA">
   <text>+ 添加</text>
 </view>

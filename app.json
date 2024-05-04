@@ -1,9 +1,9 @@
 {
   "pages": [
     "pages/todoList/todoList",
+    "pages/noteList/noteList",
     "pages/index/index",
     "pages/logs/logs"
-
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -21,6 +21,11 @@
     "list": [{
         "text": "待办",
         "pagePath": "pages/todoList/todoList",
+        "iconPath": "img/todoe.png",
+        "selectedIconPath": "img/todof.png"
+      },{
+        "text": "便笺",
+        "pagePath": "pages/noteList/noteList",
         "iconPath": "img/todoe.png",
         "selectedIconPath": "img/todof.png"
       },
