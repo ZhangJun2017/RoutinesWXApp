@@ -1,4 +1,7 @@
 <!--pages/todoList/todoList.wxml-->
+<block wx:if="{{currentPage==='null'}}">
+  <mp-loading type="circle" tips="" show="{{true}}"></mp-loading>
+</block>
 <block wx:if="{{currentPage==='todos'}}">
   <view class="todo-page {{animGb}}">
     <view class="sticky">
@@ -96,6 +99,10 @@
         <view wx:if="{{showTodoSheet}}" class="inputView {{animEa === 'input'?'animEa':''}} {{animEb === 'input'?'animEb':''}}  {{(inputing==true||hftips==' ')?'inputing':''}}">
           <text bind:tap="test">{{hftips}}</text>
           <textarea class="weui-textarea" show-confirm-bar="{{false}}" adjust-position="{{false}}" placeholder="输入待办事项....." bindinput="bindinput" bindblur="bindblur" bindfocus="bindfocus" maxlength="-1" value="{{textareaValue}}" disabled="{{hftextareadisabled}}"></textarea>
+        </view>
+        <view wx:if="{{showTodoSheet}}" class="resultNoteView {{animEa === 'resultNote'?'animEa':''}} {{animEb === 'resultNote'?'animEb':''}}  {{(inputing==true||hftips==' ')?'inputing':''}}">
+          <text bind:tap="test">{{hftips}}</text>
+          <textarea class="weui-textarea" show-confirm-bar="{{false}}" adjust-position="{{false}}" placeholder="输入待办事项....." bindinput="bindinput" bindblur="bindblur" bindfocus="bindfocus" maxlength="-1" value="{{generatedNote}}" disabled="{{true}}"></textarea>
         </view>
         <view class="resultView {{animEa === 'result'?'animEa':''}} {{animEb === 'result'?'animEb':''}}" style="margin-top: -38px;">
           <mp-cells title="选择要添加的待办事项">

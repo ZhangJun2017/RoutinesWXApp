@@ -11,6 +11,7 @@ Page({
     animEc: 'show',
     animF: false,
     animG: 'notappear',
+    animGb: 'appearB',
     todoCounter: {
       'done': 0,
       'notdone': 0,
@@ -19,7 +20,7 @@ Page({
     noteCounter: 0,
     shorten: 'shorten',
     currentTab: 'notdone',
-    currentPage: 'todos',
+    currentPage: 'null',
     textareaValue: '',
     hftitle: '',
     hftips: '',
@@ -29,6 +30,7 @@ Page({
     showTodoSheet: false,
     generateStatus: 'null',
     hfsheetContent: "",
+    generatedNote: '',
     generatedTodos: [{
       "checked": true,
       "name": "测试功能",
@@ -82,12 +84,6 @@ Page({
         "pagePath": "pages/logs/logs",
         "iconPath": "/img/todoe.png",
         "selectedIconPath": "/img/todof.png"
-      },
-      {
-        "text": "时记",
-        "pagePath": "pages/index/index",
-        "iconPath": "/img/todoe.png",
-        "selectedIconPath": "/img/todof.png"
       }
     ],
     buttons: [{
@@ -116,6 +112,19 @@ Page({
         value: 1
       }
     ],
+    addNoteButtons: [{
+        type: 'default',
+        className: '',
+        text: '智能润色',
+        value: 7
+      },
+      {
+        type: 'primary',
+        className: '',
+        text: '添加',
+        value: 8
+      }
+    ],
     successButtons: [{
         type: 'default',
         className: '',
@@ -127,6 +136,19 @@ Page({
         className: '',
         text: '添加',
         value: 3
+      }
+    ],
+    successNoteButtons: [{
+        type: 'default',
+        className: '',
+        text: '返回',
+        value: 2
+      },
+      {
+        type: 'primary',
+        className: '',
+        text: '添加',
+        value: 9
       }
     ],
     modifyAndRemoveButtons: [{
@@ -277,12 +299,21 @@ Page({
   hfopen(type, which) {
     switch (type) {
       case 'new': {
-        this.setData({
-          hftitle: '添加新待办',
-          hftips: 'Tips: 试试输入一段话，让小程序为你生成待办清单',
-          showTodoSheet: true,
-          buttons: this.data.addButtons
-        })
+        if (this.data.currentPage === 'todos') {
+          this.setData({
+            hftitle: '添加新待办',
+            hftips: 'Tips: 试试输入一段话，让小程序为你生成待办清单',
+            showTodoSheet: true,
+            buttons: this.data.addButtons
+          })
+        } else {
+          this.setData({
+            hftitle: '添加新便笺',
+            hftips: 'Tips: 试试输入一段草稿，由小程序帮你润色表达',
+            showTodoSheet: true,
+            buttons: this.data.addNoteButtons
+          })
+        }
         break;
       }
       case 'modifyAndRemove': {
@@ -465,6 +496,28 @@ Page({
       }
     })
   },
+  requestNoteGenerate(prompt) {
+    var that = this
+    wx.request({
+      url: 'https://little.bushtit.cn/parseNote',
+      data: {
+        'msg': encodeURIComponent(prompt)
+      },
+      success(res) {
+        if (res.statusCode == 200) {
+          if (res.data && res.data.result && res.data.result != 'error') {
+            var geneNote = res.data.result
+            that.updateGenerateStatus('successNote', geneNote)
+            return;
+          }
+        }
+        that.updateGenerateStatus('failed')
+      },
+      fail(res) {
+        that.updateGenerateStatus('failed')
+      }
+    })
+  },
   updateGenerateStatus(to, ext) {
     switch (to) {
       case 'null': {
@@ -472,21 +525,33 @@ Page({
           animEb: '',
           animEc: '',
           generatedTodos: [],
-          selectedTodos: []
+          selectedTodos: [],
+          generatedNote: ''
         })
         setTimeout(() => {
           this.setData({
             animEa: 'input'
           })
         }, 200);
-        setTimeout(() => {
-          this.setData({
-            animEb: 'input',
-            animEc: 'show',
-            generateStatus: 'null',
-            buttons: this.data.addButtons
-          })
-        }, 220);
+        if (this.data.currentPage === 'todos') {
+          setTimeout(() => {
+            this.setData({
+              animEb: 'input',
+              animEc: 'show',
+              generateStatus: 'null',
+              buttons: this.data.addButtons
+            })
+          }, 220);
+        } else {
+          setTimeout(() => {
+            this.setData({
+              animEb: 'input',
+              animEc: 'show',
+              generateStatus: 'null',
+              buttons: this.data.addNoteButtons
+            })
+          }, 220);
+        }
       }
       break;
     case 'success': {
@@ -506,6 +571,27 @@ Page({
       setTimeout(() => {
         this.setData({
           animEb: 'result'
+        })
+      }, 220);
+      break;
+    }
+    case 'successNote': {
+      this.setData({
+        animEb: '',
+        animEc: 'show',
+        generatedNote: ext,
+        hftips:' ',
+        buttons: this.data.successNoteButtons,
+        generateStatus: 'successNote'
+      })
+      setTimeout(() => {
+        this.setData({
+          animEa: 'resultNote'
+        })
+      }, 200);
+      setTimeout(() => {
+        this.setData({
+          animEb: 'resultNote'
         })
       }, 220);
       break;
@@ -564,6 +650,15 @@ Page({
       }
       this.hfclose()
     } else if (e.detail.item.value == 6) {
+      this.hfclose()
+    } else if (e.detail.item.value == 7) {
+      this.updateGenerateStatus('pending')
+      this.requestNoteGenerate(this.data.hfsheetContent)
+    } else if (e.detail.item.value == 8) {
+      this.doAddNote(util.uuid(), this.data.hfsheetContent)
+      this.hfclose()
+    }else if (e.detail.item.value == 9) {
+      this.doAddNote(util.uuid(), this.data.generatedNote)
       this.hfclose()
     }
   },
@@ -650,6 +745,21 @@ Page({
         selected: ''
       })
       this.updateTodoArr(todos, stats)
+    }
+  },
+  doAddNote(id, content) {
+    if (content !== undefined && content.trim() !== "") {
+      var notes = this.data.notes
+      var statsNote = this.data.statsNote
+      notes.push({
+        id: id,
+        content: content,
+        time: Date.now
+      })
+      statsNote.push({
+        animB: ''
+      })
+      this.updateNoteArr(notes, statsNote)
     }
   },
 
@@ -774,9 +884,15 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad(options) {
+  onReady(options) {
+
+  },
+  onLoad(e) {
     this.loadTodo()
     this.loadNote()
+    setTimeout(() => {
+      this.switchPages('todos')
+    }, 750);
   },
   onPageScroll(obj) {
     if (obj.scrollTop === 0) {

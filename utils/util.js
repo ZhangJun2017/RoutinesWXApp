@@ -49,23 +49,10 @@ const saveNotes = todos => {
 const loadNotes = () => {
   try {
     const todosString = wx.getStorageSync('notes');
-    // if (todosString) {
-    //   const todos = JSON.parse(todosString);
-    //   return todos;
-    // }
-    return [{
-      id: 1,
-      content: '123',
-      time: 0
-    }, {
-      id: 2,
-      content: '1222223',
-      time: 0
-    }, {
-      id: 3,
-      content: '1嗯哼噶覆盖阿萨德挖了讨论收到货了说的话水电费23',
-      time: 0
-    }];
+    if (todosString) {
+      const todos = JSON.parse(todosString);
+      return todos;
+    }
   } catch (error) {
     console.error('Failed to load todos:', error);
     return [];

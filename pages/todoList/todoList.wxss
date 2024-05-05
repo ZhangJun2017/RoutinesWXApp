@@ -278,6 +278,14 @@ page {
   background: #eeeeee;
   padding: 12px
 }
+.resultNoteView textarea {
+  height: 244px;
+  border-radius: 12px;
+  width: calc(100% - 24px);
+  margin: 12px 0 0 0;
+  background: #eeeeee;
+  padding: 12px
+}
 
 .inputing {
   transform: translateY(-30px);
