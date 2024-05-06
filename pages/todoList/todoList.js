@@ -6,6 +6,8 @@ Page({
    * 页面的初始数据
    */
   data: {
+    pickerTime:'01:01',
+    pickerDate:'2023-04-06',
     isIOS:false,
     animEa: 'input',
     animEb: 'input',
@@ -83,8 +85,8 @@ Page({
       {
         "text": "便笺",
         "pagePath": "pages/logs/logs",
-        "iconPath": "/img/todoe.png",
-        "selectedIconPath": "/img/todof.png"
+        "iconPath": "/img/notee.png",
+        "selectedIconPath": "/img/notef.png"
       }
     ],
     buttons: [{
@@ -1010,6 +1012,42 @@ Page({
         break;
     }
   },
+  timeDebug(e){
+    if(e.target.id==='tt')this.setData({pickerTime:e.detail.value})
+    if(e.target.id==='dd')this.setData({pickerDate:e.detail.value})
+    var time = this.convertToDatestamp(this.data.pickerDate+' '+this.data.pickerTime);
+    var notes = this.data.notes;
+        notes[this.data.which].time = time;
+        notes[this.data.which].simpleTime = this.formatTime(time);
+        notes[this.data.which].fullTime = this.formatTimeFull(time);
+        this.updateNoteArr(notes)
+  },
+  convertToDatestamp(dateString) {  
+    // 验证日期字符串格式  
+    const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;  
+    if (!regex.test(dateString)) {  
+        throw new Error('Invalid date string format. Expected format: yyyy-MM-dd hh:mm');  
+    }  
+  
+    // 解析日期字符串  
+    const parts = dateString.split(' ');  
+    const dateParts = parts[0].split('-');  
+    const timeParts = parts[1].split(':');  
+  
+    // 创建Date对象  
+    const date = new Date(  
+        parseInt(dateParts[0], 10), // 年份  
+        parseInt(dateParts[1], 10) - 1, // 月份（注意JavaScript中月份是从0开始的）  
+        parseInt(dateParts[2], 10), // 日  
+        parseInt(timeParts[0], 10), // 小时  
+        parseInt(timeParts[1], 10), // 分钟  
+        0, // 秒  
+        0 // 毫秒  
+    );  
+  
+    // 返回时间戳（毫秒）  
+    return date.getTime();  
+},
   formatTime(timestamp) {
     const now = new Date();
     const targetDate = new Date(timestamp);

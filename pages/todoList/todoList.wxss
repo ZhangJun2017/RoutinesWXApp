@@ -34,6 +34,8 @@ page {
   width:calc(50% - 12px);
   float:left;
   padding: 0 6px;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .todo-ops {
