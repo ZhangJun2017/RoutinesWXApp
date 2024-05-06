@@ -64,20 +64,24 @@
     <scroll-view class="notelist">
       <view class="notelistA">
         <block wx:for="{{notes}}" wx:key="id">
-          <view wx:if="{{index%2==0?true:false}}" mark:idx="{{index}}" mark:id="{{item.id}}" class="note {{statsNote[index].animB}}" bind:touchstart="handleNoteClick" bind:touchend="handleNoteClickOver" bind:tap="handleNoteTap"><view class="note-text">{{item.content}}</view><view class="note-time">{{item.simpleTime}}</view>
+          <view wx:if="{{index%2==0?true:false}}" mark:idx="{{index}}" mark:id="{{item.id}}" class="note {{statsNote[index].animB}}" bind:touchstart="handleNoteClick" bind:touchend="handleNoteClickOver" bind:tap="handleNoteTap">
+            <view class="note-text">{{item.content}}</view>
+            <view class="note-time">{{item.simpleTime}}</view>
           </view>
         </block>
       </view>
       <view class="notelistB">
         <block wx:for="{{notes}}" wx:key="id">
-          <view wx:if="{{index%2==1?true:false}}" mark:idx="{{index}}" mark:id="{{item.id}}" class="note {{statsNote[index].animB}}" bind:touchstart="handleNoteClick" bind:touchend="handleNoteClickOver" bind:tap="handleNoteTap"><view class="note-text">{{item.content}}</view><view class="note-time">{{item.simpleTime}}</view>
+          <view wx:if="{{index%2==1?true:false}}" mark:idx="{{index}}" mark:id="{{item.id}}" class="note {{statsNote[index].animB}}" bind:touchstart="handleNoteClick" bind:touchend="handleNoteClickOver" bind:tap="handleNoteTap">
+            <view class="note-text">{{item.content}}</view>
+            <view class="note-time">{{item.simpleTime}}</view>
           </view>
         </block>
       </view>
     </scroll-view>
     <view class="note-counter" style="text-align: center;">
-        共 {{noteCounter}} 条
-      </view>
+      共 {{noteCounter}} 条
+    </view>
   </view>
 </block>
 <mp-tabbar reactive="{{false}}" ext-class="tabbar" style="position:fixed;bottom:0;width:100%;left:0;right:0;" list="{{list}}" bindchange="tabChange"></mp-tabbar>
@@ -103,7 +107,7 @@
   <view slot="desc">
     <scroll-view class="{{inputing==true?'inputing-parent':''}}" style="height: 300px;" scroll-y="true">
       <view class="generateView">
-        <view wx:if="{{showTodoSheet}}" class="inputView {{animEa === 'input'?'animEa':''}} {{animEb === 'input'?'animEb':''}}  {{(inputing==true||hftips==' ')?'inputing':'notinputing'}}">
+        <view wx:if="{{showTodoSheet}}" class="inputView {{animEa === 'input'?'animEa':''}} {{animEb === 'input'?'animEb':''}}  {{(isIOS==false&&(inputing==true||hftips==' '))?'inputing':'notinputing'}}">
           <text bind:tap="test">{{hftips}}</text>
           <textarea class="weui-textarea" show-confirm-bar="{{false}}" adjust-position="{{false}}" placeholder="{{currentPage==='todos'?'输入待办事项.....':'输入便笺内容.....'}}" bindinput="bindinput" bindblur="bindblur" bindfocus="bindfocus" maxlength="-1" value="{{textareaValue}}" disabled="{{hftextareadisabled}}"></textarea>
         </view>
@@ -133,6 +137,6 @@
   </view>
 </mp-half-screen-dialog>
 <picker mode="time" value="{{pickerTime}}">
-  </picker>
-  <picker mode="date" value="{{pickerDate}}">
-  </picker>
+</picker>
+<picker mode="date" value="{{pickerDate}}">
+</picker>

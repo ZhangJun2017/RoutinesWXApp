@@ -6,6 +6,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    isIOS:false,
     animEa: 'input',
     animEb: 'input',
     animEc: 'show',
@@ -942,6 +943,7 @@ Page({
 
   },
   onLoad(e) {
+    this.setData({isIOS:wx.getDeviceInfo().system.includes('iOS')?true:false})
     this.loadTodo()
     this.loadNote()
     setTimeout(() => {
