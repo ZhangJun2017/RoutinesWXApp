@@ -52,7 +52,7 @@ const loadNotes = () => {
     if (todosString) {
       const todos = JSON.parse(todosString);
       return todos;
-    }
+    }else return [];
   } catch (error) {
     console.error('Failed to load todos:', error);
     return [];

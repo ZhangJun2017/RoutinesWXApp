@@ -1,9 +1,7 @@
 {
   "pages": [
     "pages/todoList/todoList",
-    "pages/index/index",
-    "pages/logs/logs"
-
+    "pages/index/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -19,24 +17,18 @@
     "borderStyle": "white",
     "position": "bottom",
     "list": [{
-        "text": "待办",
-        "pagePath": "pages/todoList/todoList",
-        "iconPath": "img/todoe.png",
-        "selectedIconPath": "img/todof.png"
-      },
-      {
-        "text": "分类",
-        "pagePath": "pages/logs/logs",
-        "iconPath": "img/todoe.png",
-        "selectedIconPath": "img/todof.png"
-      },
-      {
-        "text": "购物车",
-        "pagePath": "pages/index/index",
-        "iconPath": "img/todoe.png",
-        "selectedIconPath": "img/todof.png"
-      }
-    ]
+      "text": "待办",
+      "pagePath": "pages/todoList/todoList",
+      "iconPath": "/img/todoe.png",
+      "selectedIconPath": "/img/todof.png"
+    },
+    {
+      "text": "便笺",
+      "pagePath": "pages/index/index",
+      "iconPath": "/img/todoe.png",
+      "selectedIconPath": "/img/todof.png"
+    }
+  ]
   },
   "style": "v2",
   "componentFramework": "glass-easel",

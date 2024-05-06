@@ -26,8 +26,14 @@ page {
 }
 
 .notes {
-  padding-top: 5px;
-  padding-bottom: 16px;
+  padding: 5px 5px 16px 5px;
+  margin: 0 auto;
+}
+
+.notelistA,.notelistB{
+  width:calc(50% - 12px);
+  float:left;
+  padding: 0 6px;
 }
 
 .todo-ops {
@@ -105,6 +111,7 @@ page {
   height: 40px;
   margin-top: 10px;
   z-index: 999;
+  transition: all ease 0.2s;
 }
 
 /* 设置大div样式，使其水平居中 */
@@ -184,7 +191,7 @@ page {
   flex-direction: column-reverse;
 }
 
-.todo-counter {
+.todo-counter,.note-counter {
   flex-direction: column;
 }
 
@@ -198,18 +205,52 @@ page {
   background: #fefdff;
   border: #c6c5d0 1px solid;
 }
-
+.note-page{
+  width: calc(100% - 24px);
+  padding: 0 12px 16px 12px;
+}
 .note {
-  margin: 5px 10px;
+  width: calc(100% - 26px);
+  margin: 6px auto;
   padding: 8px 12px;
   border-radius: 12px;
   transition: all ease 0.5s;
-  min-height: 40px;
+  min-height: 150px;
+  max-height: 225px;
   position: relative;
   background: #fefdff;
   border: #c6c5d0 1px solid;
+  float:left;
+  position: relative;
 }
 
+.note-text{
+  width: 100%;
+  max-height: 225px;
+  overflow: hidden;
+  text-overflow: clip; 
+  position: relative;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.note-time{
+  font-size: small;
+  line-height: 20px;
+  width: calc(100% - 24px);
+  padding:3px 12px;
+  content: '...';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: #dfe1f9e8;
+  color:#767680;
+  border-radius: 0 0 12px 12px;
+  transition: all ease 0.5s;
+}
+
+.animB>.note-time{
+  background: #b4b7ced7;
+}
 .animB {
   background: #e0e0e0;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
@@ -292,6 +333,11 @@ page {
   /* margin-top: -30px; */
 }
 
+.notinputing {
+  transform: translateY(0);
+  /* margin-top: -30px; */
+}
+
 .inputing-parent {
   margin-bottom: 100px;
 }
@@ -305,6 +351,10 @@ page {
     scale 0.1s cubic-bezier(0, 0, 0.2, 1),
     transform 0s cubic-bezier(0, 0, 0.2, 1) 0.1s,
     opacity 0.1s cubic-bezier(0, 0, 0.2, 1),
+}
+
+.notappearB.todo-page{
+  transform: translateY(-40px)!important;
 }
 
 .appear {

@@ -164,6 +164,19 @@ Page({
         value: 5
       }
     ],
+    modifyAndRemoveNoteButtons: [{
+        type: 'warn',
+        className: '',
+        text: '删除',
+        value: 10
+      },
+      {
+        type: 'primary',
+        className: '',
+        text: '保存',
+        value: 11
+      }
+    ],
     removeButtons: [{
         type: 'default',
         className: '',
@@ -228,15 +241,21 @@ Page({
     notes: [{
       id: 1,
       content: '123',
-      time: 0
+      time: 0,
+      simpleTime: '',
+      fullTime: ''
     }, {
       id: 2,
       content: '1222223',
-      time: 0
+      time: 0,
+      simpleTime: '',
+      fullTime: ''
     }, {
       id: 3,
       content: '1嗯哼噶覆盖阿萨德挖了讨论收到货了说的话水电费23',
-      time: 0
+      time: 0,
+      simpleTime: '',
+      fullTime: ''
     }],
     statsNote: [{
       animB: ''
@@ -327,6 +346,17 @@ Page({
         })
         break;
       }
+      case 'modifyAndRemoveNote': {
+        this.setData({
+          hftitle: '便笺',
+          hftips: this.data.notes[which].fullTime,
+          showTodoSheet: true,
+          textareaValue: this.data.notes[which].content,
+          buttons: this.data.modifyAndRemoveNoteButtons,
+          which: which
+        })
+        break;
+      }
       case 'modify': {
         this.setData({
           hftitle: '修改待办',
@@ -379,6 +409,11 @@ Page({
   },
   handleNoteClickOver(target) {
     this.endClickAnimB(target, 'Note');
+  },
+  handleNoteTap(target) {
+    setTimeout(() => {
+      this.hfopen("modifyAndRemoveNote", target.mark.idx)
+    }, 50);
   },
   handleTodoOpClick(target) {
     this.startClickAnimD(target)
@@ -580,7 +615,7 @@ Page({
         animEb: '',
         animEc: 'show',
         generatedNote: ext,
-        hftips:' ',
+        hftips: ' ',
         buttons: this.data.successNoteButtons,
         generateStatus: 'successNote'
       })
@@ -657,8 +692,24 @@ Page({
     } else if (e.detail.item.value == 8) {
       this.doAddNote(util.uuid(), this.data.hfsheetContent)
       this.hfclose()
-    }else if (e.detail.item.value == 9) {
+    } else if (e.detail.item.value == 9) {
       this.doAddNote(util.uuid(), this.data.generatedNote)
+      this.hfclose()
+    } else if (e.detail.item.value == 10) {
+      var notes = this.data.notes;
+      notes.splice(this.data.which, 1)
+      this.updateNoteArr(notes)
+      this.hfclose()
+    } else if (e.detail.item.value == 11) {
+      var time = Date.now();
+      if (this.data.hfsheetContent !== undefined && this.data.hfsheetContent.trim() !== "") {
+        var notes = this.data.notes;
+        notes[this.data.which].content = this.data.hfsheetContent;
+        notes[this.data.which].time = time;
+        notes[this.data.which].simpleTime = this.formatTime(time);
+        notes[this.data.which].fullTime = this.formatTimeFull(time);
+        this.updateNoteArr(notes)
+      }
       this.hfclose()
     }
   },
@@ -748,13 +799,16 @@ Page({
     }
   },
   doAddNote(id, content) {
+    var time = Date.now();
     if (content !== undefined && content.trim() !== "") {
       var notes = this.data.notes
       var statsNote = this.data.statsNote
       notes.push({
         id: id,
         content: content,
-        time: Date.now
+        time: time,
+        simpleTime: this.formatTime(time),
+        fullTime: this.formatTimeFull(time)
       })
       statsNote.push({
         animB: ''
@@ -862,21 +916,21 @@ Page({
   },
   updateNoteArr(notes, stats) {
     this.setData({
-      animG: 'notappear'
+      animGb: 'notappear'
     })
     setTimeout(() => {
       if (arguments.length == 1) {
         this.setData({
           notes: notes,
           noteCounter: notes.length,
-          animG: 'appear'
+          animGb: 'appear'
         })
       } else {
         this.setData({
           notes: notes,
           statsNote: stats,
           noteCounter: notes.length,
-          animG: 'appear'
+          animGb: 'appear'
         })
       }
     }, 100);
@@ -953,6 +1007,47 @@ Page({
       default:
         break;
     }
+  },
+  formatTime(timestamp) {
+    const now = new Date();
+    const targetDate = new Date(timestamp);
+
+    // Function to pad single digit with leading zero
+    const pad = num => (num < 10 ? '0' : '') + num;
+
+    // Check if the date is today
+    if (now.toDateString() === targetDate.toDateString()) {
+      return `${pad(targetDate.getHours())}:${pad(targetDate.getMinutes())}`;
+    }
+
+    // Check if the date is within this week
+    const oneDay = 24 * 60 * 60 * 1000;
+    const firstDayOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+    const lastDayOfWeek = new Date(firstDayOfWeek.getTime() + 6 * oneDay);
+
+    if (targetDate >= firstDayOfWeek && targetDate <= lastDayOfWeek) {
+      const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+      return `${weekdays[targetDate.getDay()]} ${pad(targetDate.getHours())}:${pad(targetDate.getMinutes())}`;
+    }
+
+    // Check if the date is within this year
+    if (now.getFullYear() === targetDate.getFullYear()) {
+      return `${pad(targetDate.getMonth() + 1)}-${pad(targetDate.getDate())} ${pad(targetDate.getHours())}:${pad(targetDate.getMinutes())}`;
+    }
+
+    // Otherwise, return the full date
+    return `${targetDate.getFullYear()}-${pad(targetDate.getMonth() + 1)}-${pad(targetDate.getDate())}`;
+  },
+  formatTimeFull(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 })
 
