@@ -142,7 +142,7 @@
     <picker id="tt" mode="time" value="{{pickerTime}}" bindchange="timeDebug">
       <button type="default" class="weui-btn">时间</button>
     </picker>
-    <view> </view>
+    <rich-text nodes="<br/>"></rich-text>
     <picker id="dd" mode="date" value="{{pickerDate}}" bindchange="timeDebug">
       <button type="primary" class="weui-btn">日期</button>
     </picker>
