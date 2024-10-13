@@ -106,13 +106,13 @@
 </view> -->
 <mp-half-screen-dialog extClass="hfsheet {{animEc === 'show'?'animEc':''}}" bindbuttontap="hfbtntap" bindclose="hfclose" show="{{showTodoSheet}}" maskClosable="{{true}}" title="{{hftitle}}" buttons="{{buttons}}">
   <view slot="desc">
-    <scroll-view class="{{inputing==true?'inputing-parent':''}}" style="height: 300px;" scroll-y="true">
+    <scroll-view class="{{(isIOS==false&&(inputing==true?'inputing-parent':''))}}" style="height: 300px;" scroll-y="true">
       <view class="generateView">
         <view wx:if="{{showTodoSheet}}" class="inputView {{animEa === 'input'?'animEa':''}} {{animEb === 'input'?'animEb':''}}  {{(isIOS==false&&(inputing==true||hftips==' '))?'inputing':'notinputing'}}">
           <view bind:tap="debug">{{hftips}} </view>
-          <textarea class="weui-textarea" show-confirm-bar="{{false}}" adjust-position="{{false}}" placeholder="{{currentPage==='todos'?'输入待办事项.....':'输入便笺内容.....'}}" bindinput="bindinput" bindblur="bindblur" bindfocus="bindfocus" maxlength="-1" value="{{textareaValue}}" disabled="{{hftextareadisabled}}"></textarea>
+          <textarea class="weui-textarea" show-confirm-bar="{{false}}" adjust-position="{{isIOS}}" placeholder="{{currentPage==='todos'?'输入待办事项.....':'输入便笺内容.....'}}" bindinput="bindinput" bindblur="bindblur" bindfocus="bindfocus" maxlength="-1" value="{{textareaValue}}" disabled="{{hftextareadisabled}}"></textarea>
         </view>
-        <view wx:if="{{showTodoSheet}}" class="resultNoteView {{animEa === 'resultNote'?'animEa':''}} {{animEb === 'resultNote'?'animEb':''}}  {{(inputing==true||hftips==' ')?'inputing':'notinputing'}}">
+        <view wx:if="{{showTodoSheet}}" class="resultNoteView {{animEa === 'resultNote'?'animEa':''}} {{animEb === 'resultNote'?'animEb':''}}  {{(isIOS==false&&((inputing==true||hftips==' '))?'inputing':'notinputing')}}">
           <text bind:tap="test">{{hftips}}</text>
           <textarea class="weui-textarea" show-confirm-bar="{{false}}" adjust-position="{{false}}" placeholder="输入待办事项....." bindinput="bindinput" bindblur="bindblur" bindfocus="bindfocus" maxlength="-1" value="{{generatedNote}}" disabled="{{true}}"></textarea>
         </view>

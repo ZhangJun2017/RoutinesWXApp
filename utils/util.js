@@ -58,6 +58,19 @@ const loadNotes = () => {
     return [];
   }
 }
+const isNewUser = () => {
+  try {
+    const todosString = wx.getStorageSync('newuser');
+    if (todosString) return false
+    else {
+      wx.setStorageSync('newuser', true)
+      return true
+    }
+  } catch (error) {
+    console.error('Failed to load newuser:', error);
+    return true;
+  }
+}
 
 const uuid = function () {
   var s = [];
@@ -77,5 +90,6 @@ module.exports = {
   saveTodos,
   loadNotes,
   saveNotes,
-  uuid
+  uuid,
+  isNewUser
 }
